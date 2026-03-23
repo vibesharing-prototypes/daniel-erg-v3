@@ -34,7 +34,7 @@ If you have a standalone HTML prototype, either:
 
 ## Deployment
 
-Push to main. Vercel auto-deploys within ~30-60 seconds.
+Push to main. Vercel auto-deploys within ~30-60 seconds. If you cannot push (e.g. in a sandboxed environment), stage and commit your changes so the user can push.
 
 ```bash
 git add .

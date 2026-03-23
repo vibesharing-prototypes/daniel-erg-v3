@@ -19,7 +19,7 @@ That's it. Vercel auto-deploys from this repo on every push to main.
 
 ## Deploy Rules
 
-- Do NOT run vercel, vercel --yes, or vercel deploy
+- Do NOT run \`vercel\`, \`vercel --yes\`, or \`vercel deploy\`
 - Do NOT zip files or use any deploy API
 - Do NOT create new Vercel projects
 - Do NOT use curl to call vibesharing.app/api endpoints
