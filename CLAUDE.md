@@ -2,44 +2,56 @@
 
 ## Project Structure
 
-This is a **Next.js 14 App Router** project deployed via [VibeSharing](https://vibesharing.app).
+This is a **Next.js 14 App Router** prototype deployed via VibeSharing. It demonstrates a GRC Command Center for emerging risk detection and disclosure workflow.
 
-- app/page.tsx — **Main page. This is what visitors see.** Edit this file.
-- app/layout.tsx — Root layout (HTML head, global styles)
-- app/globals.css — Tailwind CSS styles
-- public/ — Static assets (images, fonts, standalone HTML)
+**Active pages**: `/` (index), `/gc-commandcenter`, `/gc-commandcenter/status`
+
+### Source Files (8 total)
+- `app/page.tsx` — Prototype index hub
+- `app/layout.tsx` — Root layout (Plus Jakarta Sans, VibeSharing SDK)
+- `app/globals.css` — Tailwind + CSS variables + animations
+- `app/components/ProtoPanel.tsx` — Theme toggle bar (used on every page)
+- `app/components/ScanModal.tsx` — Agent scan modal + toast + pill
+- `app/gc-commandcenter/page.tsx` — GRC Command Center dashboard
+- `app/gc-commandcenter/status/page.tsx` — Risk Owners Notified page
+- `app/superhero/StakeholderFooter.tsx` — Prototype nav footer
+
+### Design System
+Visual direction documented in `visual_direction.md`. Key: Plus Jakarta Sans, `#f0f0f1` bg, `rounded-[20px]` cards, `dark:` variants on everything, semantic status colors.
+
+## Deep Context
+
+**Read `.context/` folder** for comprehensive project knowledge:
+- `.context/PROJECT.md` — Full project context, history, decisions, design system
+- `.context/VIBESHARING.md` — Deployment guide, known issues, troubleshooting
+- `.context/ROADMAP.md` — What's done, what's next, reference prototypes
+- `.context/PATTERNS.md` — Code conventions, component patterns, dark mode guide
+
+## IMPORTANT: Deployment
+
+Deploy via VibeSharing MCP tool. **Always do full deploys** — include ALL config + app + static files. See `.context/VIBESHARING.md` for the exact file list and known issues.
+
+Prototype ID: `42e8e6a0-4f82-4d83-a053-0a638c944b5d`
 
 ## IMPORTANT: File Placement Rules
 
-**NEVER put HTML files in the repo root.** Next.js does not serve files from the root directory. They will be invisible to visitors.
+- React components go in `app/` or `app/components/`
+- Static assets go in `public/`
+- **Never** put HTML files in the repo root
 
-Where files go:
-- React components → app/page.tsx or app/components/
-- Static HTML files → public/ directory (served at /filename.html)
-- Images/assets → public/ directory
+## Tech Stack
 
-If you have a standalone HTML prototype, either:
-1. **Preferred:** Convert it to a React component in app/page.tsx
-2. **Alternative:** Place it in public/prototype.html and update app/page.tsx to redirect:
-   ```tsx
-   import { redirect } from "next/navigation";
-   export default function Page() { redirect("/prototype.html"); }
-   ```
+- Next.js 14, React 18, Tailwind CSS, TypeScript
+- `output: "export"` for static builds
+- `darkMode: "class"` in Tailwind config
 
-## Conventions
-
-- Next.js 14 (App Router) + Tailwind CSS
-- Keep prototypes self-contained — inline mock data, no external APIs
-- One page.tsx per prototype when possible
-
-## Deployment
-
-Push to main. Vercel auto-deploys within ~30-60 seconds.
+## Development
 
 ```bash
-git add .
-git commit -m "Describe what changed"
-git push origin main
+npm install
+npm run dev    # localhost:3000
 ```
 
-**Do NOT use vercel CLI, vercel deploy, zip upload, or any API endpoint. Just git push.**
+## V2 Reference
+
+Original V2 preserved at git tag `v2-baseline` and source repo `https://github.com/vibesharing-prototypes/174f24af-erg-v2.git`. Use as feature reference only — rebuild to V3 design system, don't import wholesale.
