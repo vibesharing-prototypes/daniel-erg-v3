@@ -108,111 +108,123 @@ export default function CommandCenterStatusPage() {
         </div>
       </nav>
 
-      {/* Main content */}
-      <div className="mx-auto w-full max-w-6xl px-6 py-6">
-        <div className="suggestion-card rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden relative">
-          {/* Emerald top glow */}
-          <div
-            className="suggestion-card-glow absolute top-0 left-0 right-0 h-20 pointer-events-none"
-            style={{ background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(16,185,129,0.07) 0%, transparent 100%)" }}
-          />
+      {/* Hero banner — open layout, no container */}
+      <div className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 90% 100% at 50% 0%, rgba(16,185,129,0.05) 0%, transparent 100%)" }}
+        />
+        <div className="relative mx-auto max-w-2xl px-6 pt-12 pb-10 text-center">
+          {/* Status pill */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-zinc-900 px-4 py-1.5 mb-6">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span className="text-[13px] font-semibold text-emerald-700 dark:text-emerald-400">Risk Owners Notified</span>
+          </div>
 
-          <div className="relative p-[22px_24px] space-y-6">
-            {/* Success banner */}
-            <div className="rounded-xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/40 dark:bg-emerald-950/10 p-5">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
-                  <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 6l3 3 5-5"/>
-                  </svg>
-                </div>
-                <div>
-                  <h2 className="text-[16px] font-semibold leading-[1.35] text-emerald-700 dark:text-emerald-400">Risk owners notified</h2>
-                  <p className="text-[12px] text-slate-400 dark:text-zinc-500">Today at 10:00 AM</p>
-                </div>
+          {/* Headline */}
+          <h1 className="text-[2.5rem] font-light tracking-[-0.02em] text-slate-800 dark:text-zinc-100 leading-[1.15] mb-4">
+            All owners notified — assessments underway.
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed max-w-xl mx-auto">
+            3 risk owners have been assigned and notified. Each will complete an AI-guided interview
+            to assess severity, likelihood, and existing controls. You&apos;ll receive updates as they respond.
+          </p>
+
+          {/* Metric boxes */}
+          <div className="flex items-center justify-center gap-3 mt-8">
+            {[
+              { value: "3", label: "Risks Assigned" },
+              { value: "3", label: "Owners Notified" },
+              { value: "0", label: "Responses" },
+            ].map((metric) => (
+              <div key={metric.label} className="w-28 h-20 rounded-xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 flex flex-col items-center justify-center">
+                <span className="text-[22px] font-semibold text-slate-800 dark:text-zinc-100">{metric.value}</span>
+                <span className="text-[11px] text-slate-400 dark:text-zinc-500">{metric.label}</span>
               </div>
-              <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ml-11">
-                All 3 owners have been notified and will complete an AI-guided interview to assess severity, likelihood, and existing controls. You&apos;ll receive updates as they respond.
-              </p>
-            </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-            {/* Risk cards */}
-            <div>
-              <h3 className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-3">Risk assessments underway</h3>
-              <div className="space-y-3">
-                {ASSIGNED_RISKS.map((risk, i) => (
-                  <div
-                    key={risk.id}
-                    className="suggestion-card rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-[22px_24px] transition-all duration-[250ms] ease-out hover:bg-slate-50 dark:hover:bg-zinc-800 hover:border-slate-200 dark:hover:border-zinc-600 hover:shadow-[0_8px_28px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 [will-change:transform] [backface-visibility:hidden]"
-                    style={{ animationDelay: `${i * 120}ms` }}
-                  >
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <SeverityBadge severity={risk.severity} />
-                        <p className="text-[14px] font-semibold text-slate-800 dark:text-zinc-100 truncate">{risk.name}</p>
-                      </div>
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <div className="flex items-center gap-2">
-                          <img src={risk.avatarUrl} alt={risk.owner} className="h-7 w-7 rounded-full object-cover" />
-                          <div>
-                            <p className="text-[13px] font-semibold text-slate-700 dark:text-zinc-200">{risk.owner}</p>
-                            <p className="text-[11px] text-slate-400 dark:text-zinc-500">{risk.title}</p>
-                          </div>
-                        </div>
-                        <button className="text-[13px] font-normal text-slate-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 border border-black/[0.09] dark:border-zinc-700 rounded-xl py-[7px] px-3 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-200 dark:hover:border-zinc-600 transition-colors">
-                          Follow up
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-black/[0.05] dark:border-zinc-800">
-                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 dark:text-zinc-500">
-                        <circle cx="8" cy="8" r="6.5" /><polyline points="8 4.5 8 8 10.5 9.5" />
-                      </svg>
-                      <span className="text-[12px] text-slate-400 dark:text-zinc-500">Notified today at {risk.notifiedAt} · {risk.status}</span>
-                    </div>
+      {/* Content area */}
+      <div className="mx-auto w-full max-w-6xl px-6 pb-6 space-y-6">
+        {/* Risk cards */}
+        <div>
+          <h3 className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-3">Risk assessments underway</h3>
+          <div className="space-y-3">
+            {ASSIGNED_RISKS.map((risk, i) => (
+              <div
+                key={risk.id}
+                className="suggestion-card rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-[22px_24px] transition-all duration-[250ms] ease-out hover:bg-slate-50 dark:hover:bg-zinc-800 hover:border-slate-200 dark:hover:border-zinc-600 hover:shadow-[0_8px_28px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 [will-change:transform] [backface-visibility:hidden]"
+                style={{ animationDelay: `${i * 120}ms` }}
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <SeverityBadge severity={risk.severity} />
+                    <p className="text-[14px] font-semibold text-slate-800 dark:text-zinc-100 truncate">{risk.name}</p>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* What happens next */}
-            <div className="rounded-xl bg-slate-50 dark:bg-zinc-800 border border-black/[0.05] dark:border-zinc-700 p-5">
-              <h3 className="text-[16px] font-semibold leading-[1.35] text-slate-800 dark:text-zinc-100 mb-3">What happens next</h3>
-              <div className="space-y-3">
-                {[
-                  "Each risk owner completes an AI-guided interview about severity, likelihood, and existing controls or mitigations.",
-                  "The system will evaluate whether the company needs to update its regulatory disclosures (10-K, 10-Q, 8-K).",
-                  "You\u2019ll be notified when assessments are complete and disclosure recommendations are ready for your review.",
-                ].map((text, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white dark:bg-zinc-900 border border-black/[0.09] dark:border-zinc-700 flex-shrink-0 mt-0.5">
-                      <span className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">{i + 1}</span>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <div className="flex items-center gap-2">
+                      <img src={risk.avatarUrl} alt={risk.owner} className="h-7 w-7 rounded-full object-cover" />
+                      <div>
+                        <p className="text-[13px] font-semibold text-slate-700 dark:text-zinc-200">{risk.owner}</p>
+                        <p className="text-[11px] text-slate-400 dark:text-zinc-500">{risk.title}</p>
+                      </div>
                     </div>
-                    <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">{text}</p>
+                    <button className="text-[13px] font-normal text-slate-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 border border-black/[0.09] dark:border-zinc-700 rounded-xl py-[7px] px-3 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-200 dark:hover:border-zinc-600 transition-colors">
+                      Follow up
+                    </button>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Prompt box */}
-            <div className="h-px bg-gradient-to-r from-transparent via-slate-300 dark:via-zinc-700 to-transparent" />
-            <div className="rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-2 shadow-[0_8px_28px_rgba(0,0,0,0.06)]">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-zinc-800 border border-black/[0.05] dark:border-zinc-700 flex-shrink-0 p-1.5">
-                  <DiligentLogoFull />
                 </div>
-                <input
-                  type="text"
-                  placeholder="Ask about risk status, follow up with owners..."
-                  className="flex-1 bg-transparent text-[14px] text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none"
-                />
-                <button className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 transition-colors flex-shrink-0">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M14 2L7 9" /><path d="M14 2L9.5 14L7 9L2 6.5L14 2Z" />
+                <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-black/[0.05] dark:border-zinc-800">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 dark:text-zinc-500">
+                    <circle cx="8" cy="8" r="6.5" /><polyline points="8 4.5 8 8 10.5 9.5" />
                   </svg>
-                </button>
+                  <span className="text-[12px] text-slate-400 dark:text-zinc-500">Notified today at {risk.notifiedAt} · {risk.status}</span>
+                </div>
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* What happens next */}
+        <div>
+          <h3 className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-3">What happens next</h3>
+          <div className="space-y-3">
+            {[
+              "Each risk owner completes an AI-guided interview about severity, likelihood, and existing controls or mitigations.",
+              "The system will evaluate whether the company needs to update its regulatory disclosures (10-K, 10-Q, 8-K).",
+              "You\u2019ll be notified when assessments are complete and disclosure recommendations are ready for your review.",
+            ].map((text, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white dark:bg-zinc-900 border border-black/[0.09] dark:border-zinc-700 flex-shrink-0 mt-0.5">
+                  <span className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">{i + 1}</span>
+                </div>
+                <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Prompt box */}
+        <div className="h-px bg-gradient-to-r from-transparent via-slate-300 dark:via-zinc-700 to-transparent" />
+        <div className="rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-2 shadow-[0_8px_28px_rgba(0,0,0,0.06)]">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-zinc-800 border border-black/[0.05] dark:border-zinc-700 flex-shrink-0 p-1.5">
+              <DiligentLogoFull />
             </div>
+            <input
+              type="text"
+              placeholder="Ask about risk status, follow up with owners..."
+              className="flex-1 bg-transparent text-[14px] text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none"
+            />
+            <button className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 transition-colors flex-shrink-0">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2L7 9" /><path d="M14 2L9.5 14L7 9L2 6.5L14 2Z" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
