@@ -1,4 +1,6 @@
 {
+  "buildCommand": "next build && rm -rf public && mv out public",
+  "outputDirectory": "public",
   "headers": [
     {
       "source": "/(.*)",
