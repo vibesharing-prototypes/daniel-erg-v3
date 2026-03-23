@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { StakeholderFooter, PrototypeControlLink } from "../../superhero/StakeholderFooter";
+import { ProtoPanel } from "../../components/ProtoPanel";
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -65,138 +65,110 @@ function DiligentLogoFull() {
   );
 }
 
-function Card({ children, className }: { children: React.ReactNode; className?: string }) {
+function SeverityBadge({ severity }: { severity: "Critical" | "High" }) {
+  const classes = severity === "Critical"
+    ? "bg-red-50 border-red-200 text-red-700 dark:bg-red-950/40 dark:border-red-800 dark:text-red-400"
+    : "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-400";
   return (
-    <div className={cn("overflow-hidden rounded-2xl border border-[#30363d] bg-[#161b22]", className)}>
-      {children}
-    </div>
+    <span className={cn("inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold", classes)}>
+      {severity}
+    </span>
   );
 }
 
 export default function CommandCenterStatusPage() {
-  const [demoPanelOpen, setDemoPanelOpen] = React.useState(true);
-  const [demoPanelHydrated, setDemoPanelHydrated] = React.useState(false);
-
-  React.useEffect(() => {
-    const stored = localStorage.getItem("demo-panel-open");
-    if (stored !== null) setDemoPanelOpen(stored === "true");
-    setDemoPanelHydrated(true);
-  }, []);
-
-  React.useEffect(() => {
-    if (demoPanelHydrated) localStorage.setItem("demo-panel-open", String(demoPanelOpen));
-  }, [demoPanelOpen, demoPanelHydrated]);
-
   return (
-    <div className="min-h-screen bg-[#0d1117]">
-      {/* Demo banner */}
-      <div className="border-b-2 border-[#0ea5e9]/40 bg-[#e0f2fe]">
-        <div className="border-b border-[#0ea5e9]/30 bg-[#bae6fd] px-4 py-2 flex items-center justify-between">
-          <Link href="/" className="text-[10px] font-medium uppercase tracking-widest text-[#0369a1] hover:text-[#075985] transition-colors">
-            Diligent Prototype — For illustrative and alignment purposes
-          </Link>
-          <button
-            onClick={() => setDemoPanelOpen(!demoPanelOpen)}
-            className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-medium text-[#0369a1] hover:bg-[#7dd3fc]/30 transition-colors"
-          >
-            {demoPanelOpen ? "Hide" : "Show"}
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={cn("transition-transform", demoPanelOpen ? "" : "rotate-180")}><polyline points="6 9 12 15 18 9" /></svg>
-          </button>
-        </div>
-        {demoPanelOpen && (
-          <>
-            <div className="w-full border-b border-[#0ea5e9]/20 bg-[#e0f2fe]">
-              <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 flex-wrap gap-2">
-                <div className="flex items-center gap-4">
-                  <span className="rounded-full border-2 border-[#0c4a6e] bg-[#7dd3fc]/30 px-3 py-1 text-xs font-semibold text-[#0c4a6e]">
-                    Viewing as: General Counsel — risk owners assigned &amp; notified
-                  </span>
-                </div>
-                <div className="flex items-center gap-1 rounded-xl border border-[#0ea5e9]/40 bg-white p-1">
-                  <Link href="/gc-commandcenter" className="rounded-lg px-3 py-1.5 text-xs font-medium transition text-[#0369a1] hover:bg-[#bae6fd]">← Command Center</Link>
-                  <button className="rounded-lg px-3 py-1.5 text-xs font-medium transition bg-[#0ea5e9] text-white">Risks Underway</button>
-                </div>
-              </div>
-            </div>
-            <div className="border-t-2 border-[#0ea5e9] bg-[#0c4a6e] px-4 py-2">
-              <p className="text-[10px] font-medium uppercase tracking-widest text-[#7dd3fc]">↓ Prototype starts below — GC sees risk investigations are underway</p>
-            </div>
-          </>
-        )}
-      </div>
+    <div className="min-h-screen bg-[#f0f0f1] dark:bg-zinc-950">
+      <ProtoPanel
+        description="Viewing as: General Counsel — risk owners assigned &amp; notified"
+        stateToggle={false}
+      />
 
-      {/* Main content */}
-      <div className="mx-auto w-full max-w-6xl px-6 py-6">
-        <Card>
-          {/* Top bar */}
-          <div className="px-6 py-4 border-b border-[#30363d] flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white p-1">
-                <DiligentLogoFull />
-              </div>
-              <div>
-                <h1 className="text-sm font-semibold text-[#f0f6fc]">GRC Command Center</h1>
-                <p className="text-[10px] text-[#6e7681]">Risk monitoring &amp; governance</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+      {/* Top nav bar */}
+      <nav className="border-b border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-3.5">
+          <div className="flex items-center gap-2.5">
+            <DiligentLogoFull />
+            <span className="text-xs font-semibold tracking-tight text-slate-800 dark:text-zinc-100">GRC Command Center</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-colors relative">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 2a4 4 0 0 1 4 4c0 2.667 1.333 4 1.333 4H2.667S4 8.667 4 6a4 4 0 0 1 4-4Z"/><path d="M6.87 13a1.333 1.333 0 0 0 2.26 0"/></svg>
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full ring-1 ring-white dark:ring-zinc-900" />
+            </button>
+            <div className="h-5 w-px bg-slate-200 dark:bg-zinc-700" />
+            <div className="flex items-center gap-2">
               <img src="https://randomuser.me/api/portraits/med/women/65.jpg" alt="Sarah Mitchell" className="h-7 w-7 rounded-full object-cover" />
               <div>
-                <p className="text-xs font-medium text-[#f0f6fc]">Sarah Mitchell</p>
-                <p className="text-[10px] text-[#6e7681]">General Counsel</p>
+                <p className="text-xs font-semibold text-slate-800 dark:text-zinc-100">Sarah Mitchell</p>
+                <p className="text-[10px] text-slate-400 dark:text-zinc-500">General Counsel</p>
               </div>
             </div>
           </div>
+        </div>
+      </nav>
 
-          <div className="p-6 space-y-6">
+      {/* Main content */}
+      <div className="mx-auto w-full max-w-6xl px-6 py-6">
+        <div className="suggestion-card rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden relative">
+          {/* Emerald top glow */}
+          <div
+            className="suggestion-card-glow absolute top-0 left-0 right-0 h-20 pointer-events-none"
+            style={{ background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(16,185,129,0.07) 0%, transparent 100%)" }}
+          />
+
+          <div className="relative p-[22px_24px] space-y-6">
             {/* Success banner */}
-            <div className="rounded-xl border border-[#3fb950]/30 bg-[#3fb950]/5 p-5">
+            <div className="rounded-xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/40 dark:bg-emerald-950/10 p-5">
               <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#3fb950]/20">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3fb950" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
+                  <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 6l3 3 5-5"/>
+                  </svg>
                 </div>
                 <div>
-                  <h2 className="text-base font-semibold text-[#3fb950]">Risk owners notified</h2>
-                  <p className="text-xs text-[#8b949e]">Today at 10:00 AM</p>
+                  <h2 className="text-[16px] font-semibold leading-[1.35] text-emerald-700 dark:text-emerald-400">Risk owners notified</h2>
+                  <p className="text-[12px] text-slate-400 dark:text-zinc-500">Today at 10:00 AM</p>
                 </div>
               </div>
-              <p className="text-sm text-[#c9d1d9] ml-11">
+              <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ml-11">
                 All 3 owners have been notified and will complete an AI-guided interview to assess severity, likelihood, and existing controls. You&apos;ll receive updates as they respond.
               </p>
             </div>
 
-            {/* Risk cards — subdued, underway state */}
+            {/* Risk cards */}
             <div>
-              <h3 className="text-xs font-medium uppercase tracking-wider text-[#6e7681] mb-3">Risk assessments underway</h3>
+              <h3 className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-3">Risk assessments underway</h3>
               <div className="space-y-3">
-                {ASSIGNED_RISKS.map((risk) => (
-                  <div key={risk.id} className="rounded-xl border border-[#30363d] bg-[#0d1117] p-4">
+                {ASSIGNED_RISKS.map((risk, i) => (
+                  <div
+                    key={risk.id}
+                    className="suggestion-card rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-[22px_24px] transition-all duration-[250ms] ease-out hover:bg-slate-50 dark:hover:bg-zinc-800 hover:border-slate-200 dark:hover:border-zinc-600 hover:shadow-[0_8px_28px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 [will-change:transform] [backface-visibility:hidden]"
+                    style={{ animationDelay: `${i * 120}ms` }}
+                  >
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-3 min-w-0">
-                        <span className={cn(
-                          "inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-bold uppercase flex-shrink-0",
-                          risk.severity === "Critical" ? "bg-[#da3633]/20 text-[#ff7b72]" : "bg-[#d29922]/20 text-[#d29922]"
-                        )}>
-                          {risk.severity}
-                        </span>
-                        <p className="text-sm font-medium text-[#c9d1d9] truncate">{risk.name}</p>
+                        <SeverityBadge severity={risk.severity} />
+                        <p className="text-[14px] font-semibold text-slate-800 dark:text-zinc-100 truncate">{risk.name}</p>
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
                         <div className="flex items-center gap-2">
-                          <img src={risk.avatarUrl} alt={risk.owner} className="h-6 w-6 rounded-full object-cover" />
+                          <img src={risk.avatarUrl} alt={risk.owner} className="h-7 w-7 rounded-full object-cover" />
                           <div>
-                            <p className="text-xs font-medium text-[#e6edf3]">{risk.owner}</p>
-                            <p className="text-[10px] text-[#484f58]">{risk.title}</p>
+                            <p className="text-[13px] font-semibold text-slate-700 dark:text-zinc-200">{risk.owner}</p>
+                            <p className="text-[11px] text-slate-400 dark:text-zinc-500">{risk.title}</p>
                           </div>
                         </div>
-                        <button className="text-[11px] text-[#58a6ff] hover:text-[#79b8ff] transition-colors">
+                        <button className="text-[13px] font-normal text-slate-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 border border-black/[0.09] dark:border-zinc-700 rounded-xl py-[7px] px-3 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-200 dark:hover:border-zinc-600 transition-colors">
                           Follow up
                         </button>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-[#21262d]">
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#484f58" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                      <span className="text-[10px] text-[#484f58]">Notified today at {risk.notifiedAt} · {risk.status}</span>
+                    <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-black/[0.05] dark:border-zinc-800">
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 dark:text-zinc-500">
+                        <circle cx="8" cy="8" r="6.5" /><polyline points="8 4.5 8 8 10.5 9.5" />
+                      </svg>
+                      <span className="text-[12px] text-slate-400 dark:text-zinc-500">Notified today at {risk.notifiedAt} · {risk.status}</span>
                     </div>
                   </div>
                 ))}
@@ -204,50 +176,45 @@ export default function CommandCenterStatusPage() {
             </div>
 
             {/* What happens next */}
-            <div className="rounded-xl border border-[#30363d] bg-[#161b22] p-5">
-              <h3 className="text-sm font-semibold text-[#f0f6fc] mb-3">What happens next</h3>
+            <div className="rounded-xl bg-slate-50 dark:bg-zinc-800 border border-black/[0.05] dark:border-zinc-700 p-5">
+              <h3 className="text-[16px] font-semibold leading-[1.35] text-slate-800 dark:text-zinc-100 mb-3">What happens next</h3>
               <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#58a6ff]/10 flex-shrink-0 mt-0.5">
-                    <span className="text-[10px] font-bold text-[#58a6ff]">1</span>
+                {[
+                  "Each risk owner completes an AI-guided interview about severity, likelihood, and existing controls or mitigations.",
+                  "The system will evaluate whether the company needs to update its regulatory disclosures (10-K, 10-Q, 8-K).",
+                  "You\u2019ll be notified when assessments are complete and disclosure recommendations are ready for your review.",
+                ].map((text, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white dark:bg-zinc-900 border border-black/[0.09] dark:border-zinc-700 flex-shrink-0 mt-0.5">
+                      <span className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">{i + 1}</span>
+                    </div>
+                    <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">{text}</p>
                   </div>
-                  <p className="text-xs text-[#8b949e]">Each risk owner completes an AI-guided interview about severity, likelihood, and existing controls or mitigations.</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#58a6ff]/10 flex-shrink-0 mt-0.5">
-                    <span className="text-[10px] font-bold text-[#58a6ff]">2</span>
-                  </div>
-                  <p className="text-xs text-[#8b949e]">The system will evaluate whether the company needs to update its regulatory disclosures (10-K, 10-Q, 8-K).</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#58a6ff]/10 flex-shrink-0 mt-0.5">
-                    <span className="text-[10px] font-bold text-[#58a6ff]">3</span>
-                  </div>
-                  <p className="text-xs text-[#8b949e]">You&apos;ll be notified when assessments are complete and disclosure recommendations are ready for your review.</p>
-                </div>
+                ))}
               </div>
             </div>
 
             {/* Prompt box */}
-            <div className="border-t border-[#30363d] pt-5">
-              <div className="rounded-2xl border border-[#30363d] bg-[#0d1117] p-2 shadow-xl shadow-black/50">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white flex-shrink-0 p-1.5">
-                    <DiligentLogoFull />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Ask about risk status, follow up with owners..."
-                    className="flex-1 bg-transparent text-sm text-[#f0f6fc] placeholder-[#484f58] focus:outline-none"
-                  />
-                  <button className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#21262d] text-[#6e7681] hover:text-[#f0f6fc] hover:bg-[#30363d] transition-colors flex-shrink-0">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg>
-                  </button>
+            <div className="h-px bg-gradient-to-r from-transparent via-slate-300 dark:via-zinc-700 to-transparent" />
+            <div className="rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-2 shadow-[0_8px_28px_rgba(0,0,0,0.06)]">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-zinc-800 border border-black/[0.05] dark:border-zinc-700 flex-shrink-0 p-1.5">
+                  <DiligentLogoFull />
                 </div>
+                <input
+                  type="text"
+                  placeholder="Ask about risk status, follow up with owners..."
+                  className="flex-1 bg-transparent text-[14px] text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none"
+                />
+                <button className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 transition-colors flex-shrink-0">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2L7 9" /><path d="M14 2L9.5 14L7 9L2 6.5L14 2Z" />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
-        </Card>
+        </div>
       </div>
 
       <StakeholderFooter label="Next in the prototype: Diana Reyes receives her risk owner notification">

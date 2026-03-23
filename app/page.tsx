@@ -255,6 +255,17 @@ export default function PrototypeIndex() {
       </header>
 
       <main className="mx-auto max-w-3xl px-6 py-8 space-y-8">
+        {/* Dev shortcut — redesigned pages */}
+        <div className="rounded-lg border-2 border-emerald-500/40 bg-emerald-500/10 p-4">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 mb-2">V3 Redesign (New Visual Direction)</p>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/gc-commandcenter/status" className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 px-3 py-2 text-sm font-medium text-emerald-300 hover:bg-emerald-500/30 transition-colors">
+              Risk Owners Notified (Status)
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
+            </Link>
+          </div>
+        </div>
+
         {sections.map((section) => (
           <div key={section.heading}>
             <h2 className="text-[11px] font-semibold uppercase tracking-wider text-[#6e7681] mb-3">
