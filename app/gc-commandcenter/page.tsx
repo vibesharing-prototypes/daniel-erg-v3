@@ -73,6 +73,42 @@ function SeverityBadge({ severity }: { severity: "Critical" | "High" }) {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Workflow stepper data                                               */
+/* ------------------------------------------------------------------ */
+
+const WORKFLOW_STAGES = [
+  { id: "detect", label: "Risk Detected", status: "completed" as const },
+  { id: "assess", label: "Assess & Prioritize", status: "current" as const },
+  { id: "draft", label: "Draft Updates", status: "pending" as const },
+  { id: "review", label: "Legal Review", status: "pending" as const },
+  { id: "notify", label: "Notify Board", status: "pending" as const },
+  { id: "file", label: "File / Disclose", status: "pending" as const },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Agent ticker data                                                  */
+/* ------------------------------------------------------------------ */
+
+const MONITORING_AGENTS = [
+  { name: "Risk Intelligence", lastRun: "8 min ago", nextRun: "in 7 min", state: "ALERT" as const, note: "3 emerging risks detected" },
+  { name: "Regulatory Watch", lastRun: "15 min ago", nextRun: "in 15 min", state: "ALERT" as const, note: "EU DMA enforcement pattern" },
+  { name: "Vendor Intelligence", lastRun: "32 min ago", nextRun: "in 28 min", state: "ALERT" as const, note: "CloudSecure incident" },
+  { name: "Board Materials Monitor", lastRun: "1 hr ago", nextRun: "in 30 min", state: "WARN" as const, note: "Gap: materials don\u2019t reflect risks" },
+  { name: "10K Disclosure Tracker", lastRun: "2 hr ago", nextRun: "in 1 hr", state: "WARN" as const, note: "Risk factors may be incomplete" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Pick up where you left off                                         */
+/* ------------------------------------------------------------------ */
+
+const RECENT_APPS = [
+  { name: "Boards", description: "Finalized Q1 board meeting agenda and uploaded supporting materials.", lastUsed: "Jan 16" },
+  { name: "Entities", description: "Verified annual report filings for 3 subsidiaries; all jurisdictions current.", lastUsed: "Jan 15" },
+  { name: "Policy Manager", description: "Reviewed attestation status for updated Code of Conduct; 94% completion.", lastUsed: "Jan 14" },
+  { name: "AI Reporting", description: "Generated executive summary of legal department KPIs for leadership review.", lastUsed: "Jan 12" },
+];
+
+/* ------------------------------------------------------------------ */
 /*  Dashboard content                                                  */
 /* ------------------------------------------------------------------ */
 
@@ -112,11 +148,86 @@ function Dashboard({ onAssign }: { onAssign: () => void }) {
               </div>
             ))}
           </div>
+
+          {/* Response Workflow stepper */}
+          <div className="mt-8 pt-6 border-t border-black/[0.05] dark:border-zinc-800">
+            <p className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-4">Response Workflow</p>
+            <div className="flex items-center justify-center gap-1">
+              {WORKFLOW_STAGES.map((stage, idx) => (
+                <React.Fragment key={stage.id}>
+                  <div className={cn(
+                    "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold border transition-all",
+                    stage.status === "completed" && "bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-400",
+                    stage.status === "current" && "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-400 ring-2 ring-amber-300/50 dark:ring-amber-700/50",
+                    stage.status === "pending" && "bg-slate-50 border-black/[0.05] text-slate-400 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-500",
+                  )}>
+                    {stage.status === "completed" && (
+                      <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+                    )}
+                    {stage.status === "current" && (
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500" />
+                      </span>
+                    )}
+                    {stage.label}
+                  </div>
+                  {idx < WORKFLOW_STAGES.length - 1 && (
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={cn(
+                      stage.status === "completed" ? "text-emerald-400 dark:text-emerald-600" : "text-slate-200 dark:text-zinc-700"
+                    )}>
+                      <path d="M6 12l4-4-4-4" stroke="currentColor" />
+                    </svg>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Risk cards */}
+      {/* Agent monitoring ticker */}
+      <div className="mx-auto w-full max-w-6xl px-6 mb-6">
+        <div className="ticker-strip rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 overflow-hidden">
+          <div className="flex items-center gap-3">
+            <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-zinc-500">
+              Monitoring Agents
+            </span>
+            <div className="relative flex-1 overflow-hidden">
+              <div className="ticker-track flex w-max items-center gap-8">
+                {[...MONITORING_AGENTS, ...MONITORING_AGENTS].map((agent, idx) => (
+                  <div key={`${agent.name}-${idx}`} className="whitespace-nowrap text-[13px]">
+                    <span className={cn(
+                      "inline-flex items-center gap-1",
+                      agent.state === "ALERT" ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400",
+                    )}>
+                      <span className={cn(
+                        "w-1.5 h-1.5 rounded-full",
+                        agent.state === "ALERT" ? "bg-red-500" : "bg-amber-500",
+                      )} />
+                      <span className="font-semibold text-slate-800 dark:text-zinc-100">{agent.name}</span>
+                    </span>
+                    <span className="text-slate-300 dark:text-zinc-600 mx-1.5">·</span>
+                    <span className="text-slate-400 dark:text-zinc-500">{agent.note}</span>
+                    <span className="text-slate-300 dark:text-zinc-600 mx-1.5">·</span>
+                    <span className="text-slate-400 dark:text-zinc-500">Last {agent.lastRun}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <style>{`
+            .ticker-track { animation: ticker 60s linear infinite; }
+            .ticker-strip:hover .ticker-track { animation-play-state: paused; }
+            @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+            @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+          `}</style>
+        </div>
+      </div>
+
+      {/* Content area */}
       <div className="mx-auto w-full max-w-6xl px-6 pb-6 space-y-6">
+        {/* Detected risks */}
         <div>
           <h3 className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-3">Detected risks</h3>
           <div className="space-y-3">
@@ -148,6 +259,26 @@ function Dashboard({ onAssign }: { onAssign: () => void }) {
                     </span>
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pick up where you left off */}
+        <div>
+          <h3 className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-1">Pick up where you left off</h3>
+          <p className="text-[12px] text-slate-400 dark:text-zinc-500 mb-3">Recent activity across your Diligent tools.</p>
+          <div className="grid grid-cols-2 gap-3">
+            {RECENT_APPS.map((app) => (
+              <div
+                key={app.name}
+                className="rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-[18px_20px] cursor-pointer transition-all duration-[250ms] ease-out hover:bg-slate-50 dark:hover:bg-zinc-800 hover:border-slate-200 dark:hover:border-zinc-600 hover:shadow-[0_8px_28px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 [will-change:transform] [backface-visibility:hidden]"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[14px] font-semibold text-slate-800 dark:text-zinc-100">{app.name}</span>
+                  <span className="text-[11px] text-slate-400 dark:text-zinc-500">{app.lastUsed}</span>
+                </div>
+                <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">{app.description}</p>
               </div>
             ))}
           </div>
