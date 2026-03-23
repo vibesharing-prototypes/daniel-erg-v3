@@ -38,6 +38,7 @@ const DETECTED_RISKS = [
     severity: "Critical" as const,
     description: "Escalating tensions could disrupt semiconductor supply chain. 3 supplier contracts at risk.",
     source: "Risk Intelligence + Supply Chain Data",
+    moodys: "Sector stress index 78/100. 3 of 5 key suppliers on negative credit watch. TSMC sovereign risk shifted to negative.",
     suggestedOwner: "Diana Reyes",
     suggestedOwnerTitle: "VP, Supply Chain",
     avatarUrl: "https://randomuser.me/api/portraits/med/women/44.jpg",
@@ -48,6 +49,7 @@ const DETECTED_RISKS = [
     severity: "High" as const,
     description: "CloudSecure breach confirmed. Vendor handles PII for 2.3M customers.",
     source: "Vendor Intelligence",
+    moodys: "CloudSecure credit rating B2, negative watch. Cyber-risk adjusted vendor score: 3.1/10. Sector breach frequency up 34% YoY.",
     suggestedOwner: "Marcus Webb",
     suggestedOwnerTitle: "CISO",
     avatarUrl: "https://i.pravatar.cc/150?u=marcus-webb",
@@ -58,6 +60,7 @@ const DETECTED_RISKS = [
     severity: "High" as const,
     description: "First enforcement actions expected Q2. Company's EU operations may require disclosure.",
     source: "Regulatory Watch",
+    moodys: "EU regulatory compliance risk: elevated. 3 peer companies downgraded on DMA exposure. Enforcement accelerating — 12 actions in 6 months vs. 4 prior year.",
     suggestedOwner: "James Park",
     suggestedOwnerTitle: "Chief Compliance Officer",
     avatarUrl: "https://i.pravatar.cc/150?u=james-park",
@@ -276,13 +279,30 @@ function Dashboard({ onAssign }: { onAssign: () => void }) {
                     </div>
                     <p className="text-[16px] font-semibold leading-[1.35] text-slate-800 dark:text-zinc-100">{risk.name}</p>
                     <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed mt-1">{risk.description}</p>
+
+                    {/* Moody's Intelligence */}
+                    <div className="mt-3 rounded-xl border border-blue-200/60 dark:border-blue-900/30 bg-blue-50/40 dark:bg-blue-950/10 px-3.5 py-2.5">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-blue-500/70 dark:text-blue-400/60 mb-0.5">Moody&apos;s Intelligence</p>
+                      <p className="text-[12px] text-slate-600 dark:text-zinc-400 leading-relaxed">{risk.moodys}</p>
+                    </div>
                   </div>
                   {/* Suggested owner — right panel */}
                   <div className="flex-shrink-0 w-[200px] border-l border-black/[0.05] dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/30 p-5 flex flex-col items-center justify-center text-center">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-zinc-500 mb-3">AI-Suggested Owner</p>
                     <img src={risk.avatarUrl} alt={risk.suggestedOwner} className="h-12 w-12 rounded-full object-cover mb-2" />
                     <p className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100">{risk.suggestedOwner}</p>
-                    <p className="text-[11px] text-slate-400 dark:text-zinc-500">{risk.suggestedOwnerTitle}</p>
+                    <p className="text-[11px] text-slate-400 dark:text-zinc-500 mb-3">{risk.suggestedOwnerTitle}</p>
+                    <div className="flex items-center gap-1.5 w-full">
+                      <button
+                        onClick={onAssign}
+                        className="flex-1 text-[11px] font-semibold text-white dark:text-zinc-900 bg-slate-800 dark:bg-zinc-100 rounded-lg py-1.5 hover:bg-slate-900 dark:hover:bg-white transition-colors"
+                      >
+                        Assign
+                      </button>
+                      <button className="flex-1 text-[11px] font-semibold text-slate-400 dark:text-zinc-500 bg-white dark:bg-zinc-800 border border-black/[0.09] dark:border-zinc-700 rounded-lg py-1.5 hover:text-slate-600 dark:hover:text-zinc-300 hover:border-slate-300 dark:hover:border-zinc-600 transition-colors">
+                        Skip
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -311,29 +331,37 @@ function Dashboard({ onAssign }: { onAssign: () => void }) {
         </div>
       </div>
 
-      {/* Floating prompt box */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
-        <div className="mx-auto w-full max-w-3xl px-6 pb-5 pointer-events-auto">
-          <div className="rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl p-2 shadow-[0_-4px_32px_rgba(0,0,0,0.10)]">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-zinc-800 border border-black/[0.05] dark:border-zinc-700 flex-shrink-0 p-1.5">
-                <DiligentLogoFull />
-              </div>
-              <input
-                type="text"
-                placeholder="Ask about risks, assign owners, draft disclosures…"
-                className="flex-1 bg-transparent text-[14px] text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none"
-              />
-              <button className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 transition-colors flex-shrink-0">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2L7 9" /><path d="M14 2L9.5 14L7 9L2 6.5L14 2Z" />
-                </svg>
-              </button>
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Floating prompt bar                                                */
+/* ------------------------------------------------------------------ */
+
+function FloatingPrompt() {
+  return (
+    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100, pointerEvents: "none" }}>
+      <div style={{ maxWidth: 768, margin: "0 auto", padding: "0 24px 20px", pointerEvents: "auto" }}>
+        <div className="rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl p-2 shadow-[0_-4px_32px_rgba(0,0,0,0.10)]">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-zinc-800 border border-black/[0.05] dark:border-zinc-700 flex-shrink-0 p-1.5">
+              <DiligentLogoFull />
             </div>
+            <input
+              type="text"
+              placeholder="Ask about risks, assign owners, draft disclosures…"
+              className="flex-1 bg-transparent text-[14px] text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none"
+            />
+            <button className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 transition-colors flex-shrink-0">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2L7 9" /><path d="M14 2L9.5 14L7 9L2 6.5L14 2Z" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -433,6 +461,9 @@ function PageContent() {
         onComplete={handleScanComplete}
         triggerRestart={restartTrigger}
       />
+
+      {/* Floating prompt — always visible when dashboard is shown */}
+      {scanDone && <FloatingPrompt />}
 
       {/* Toast */}
       <ScanToast visible={showToast} onDismiss={() => setShowToast(false)} />
