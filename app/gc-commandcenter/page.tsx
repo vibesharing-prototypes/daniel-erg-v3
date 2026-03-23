@@ -40,6 +40,7 @@ const DETECTED_RISKS = [
     source: "Risk Intelligence + Supply Chain Data",
     suggestedOwner: "Diana Reyes",
     suggestedOwnerTitle: "VP, Supply Chain",
+    avatarUrl: "https://randomuser.me/api/portraits/med/women/44.jpg",
   },
   {
     id: "cyber",
@@ -49,6 +50,7 @@ const DETECTED_RISKS = [
     source: "Vendor Intelligence",
     suggestedOwner: "Marcus Webb",
     suggestedOwnerTitle: "CISO",
+    avatarUrl: "https://i.pravatar.cc/150?u=marcus-webb",
   },
   {
     id: "dma",
@@ -58,6 +60,7 @@ const DETECTED_RISKS = [
     source: "Regulatory Watch",
     suggestedOwner: "James Park",
     suggestedOwnerTitle: "Chief Compliance Officer",
+    avatarUrl: "https://i.pravatar.cc/150?u=james-park",
   },
 ];
 
@@ -151,33 +154,46 @@ function Dashboard({ onAssign }: { onAssign: () => void }) {
 
           {/* Response Workflow stepper */}
           <div className="mt-8 pt-6 border-t border-black/[0.05] dark:border-zinc-800">
-            <p className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-4">Response Workflow</p>
-            <div className="flex items-center justify-center gap-1">
+            <p className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-5">Response Workflow</p>
+            <div className="flex items-center justify-center">
               {WORKFLOW_STAGES.map((stage, idx) => (
                 <React.Fragment key={stage.id}>
-                  <div className={cn(
-                    "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold border transition-all",
-                    stage.status === "completed" && "bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-400",
-                    stage.status === "current" && "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-400 ring-2 ring-amber-300/50 dark:ring-amber-700/50",
-                    stage.status === "pending" && "bg-slate-50 border-black/[0.05] text-slate-400 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-500",
-                  )}>
-                    {stage.status === "completed" && (
-                      <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6l3 3 5-5"/></svg>
-                    )}
-                    {stage.status === "current" && (
-                      <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500" />
-                      </span>
-                    )}
-                    {stage.label}
+                  <div className="flex flex-col items-center gap-1.5 min-w-0">
+                    {/* Circle */}
+                    <div className={cn(
+                      "flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all",
+                      stage.status === "completed" && "bg-emerald-500 border-emerald-500",
+                      stage.status === "current" && "bg-white dark:bg-zinc-900 border-amber-400 dark:border-amber-500 ring-4 ring-amber-100 dark:ring-amber-900/30",
+                      stage.status === "pending" && "bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-700",
+                    )}>
+                      {stage.status === "completed" && (
+                        <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+                      )}
+                      {stage.status === "current" && (
+                        <span className="relative flex h-2.5 w-2.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60" />
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
+                        </span>
+                      )}
+                      {stage.status === "pending" && (
+                        <span className="w-2 h-2 rounded-full bg-slate-200 dark:bg-zinc-700" />
+                      )}
+                    </div>
+                    {/* Label */}
+                    <span className={cn(
+                      "text-[11px] font-semibold whitespace-nowrap",
+                      stage.status === "completed" && "text-emerald-600 dark:text-emerald-400",
+                      stage.status === "current" && "text-amber-600 dark:text-amber-400",
+                      stage.status === "pending" && "text-slate-400 dark:text-zinc-500",
+                    )}>
+                      {stage.label}
+                    </span>
                   </div>
                   {idx < WORKFLOW_STAGES.length - 1 && (
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={cn(
-                      stage.status === "completed" ? "text-emerald-400 dark:text-emerald-600" : "text-slate-200 dark:text-zinc-700"
-                    )}>
-                      <path d="M6 12l4-4-4-4" stroke="currentColor" />
-                    </svg>
+                    <div className={cn(
+                      "flex-1 h-0.5 rounded-full mx-1 mt-[-18px]",
+                      stage.status === "completed" ? "bg-emerald-400 dark:bg-emerald-600" : "bg-slate-200 dark:bg-zinc-700",
+                    )} />
                   )}
                 </React.Fragment>
               ))}
@@ -225,20 +241,35 @@ function Dashboard({ onAssign }: { onAssign: () => void }) {
         </div>
       </div>
 
-      {/* Content area */}
-      <div className="mx-auto w-full max-w-6xl px-6 pb-6 space-y-6">
-        {/* Detected risks */}
+      {/* Content area — extra bottom padding for floating prompt */}
+      <div className="mx-auto w-full max-w-6xl px-6 pb-24 space-y-6">
+        {/* Detected risks — header with auto-assign CTA */}
         <div>
-          <h3 className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-3">Detected risks</h3>
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <h3 className="text-[11px] font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide mb-1">Detected risks</h3>
+              <p className="text-[13px] text-slate-500 dark:text-zinc-400">3 emerging risks found across 5 monitoring agents. AI-suggested owners are ready to assign.</p>
+            </div>
+            <button
+              onClick={onAssign}
+              className="flex-shrink-0 inline-flex items-center gap-2 rounded-xl bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 px-5 py-[11px] text-[14px] font-normal hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="8" cy="6" r="3" /><path d="M2 14c0-3.3 2.7-5 6-5s6 1.7 6 5" /><path d="M12 3v4M14 5h-4" />
+              </svg>
+              Assign all suggested owners
+            </button>
+          </div>
           <div className="space-y-3">
             {DETECTED_RISKS.map((risk, i) => (
               <div
                 key={risk.id}
-                className="suggestion-card rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-[22px_24px] transition-all duration-[250ms] ease-out hover:bg-slate-50 dark:hover:bg-zinc-800 hover:border-slate-200 dark:hover:border-zinc-600 hover:shadow-[0_8px_28px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 [will-change:transform] [backface-visibility:hidden]"
+                className="suggestion-card rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden transition-all duration-[250ms] ease-out hover:border-slate-200 dark:hover:border-zinc-600 hover:shadow-[0_8px_28px_rgba(0,0,0,0.06)] [will-change:transform] [backface-visibility:hidden]"
                 style={{ animationDelay: `${i * 120}ms` }}
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
+                <div className="flex">
+                  {/* Risk detail — left */}
+                  <div className="flex-1 min-w-0 p-[22px_24px]">
                     <div className="flex items-center gap-2 mb-1.5">
                       <SeverityBadge severity={risk.severity} />
                       <span className="text-[11px] text-slate-400 dark:text-zinc-500">{risk.source}</span>
@@ -246,17 +277,12 @@ function Dashboard({ onAssign }: { onAssign: () => void }) {
                     <p className="text-[16px] font-semibold leading-[1.35] text-slate-800 dark:text-zinc-100">{risk.name}</p>
                     <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed mt-1">{risk.description}</p>
                   </div>
-                </div>
-                <div className="flex items-center justify-between mt-4 pt-3 border-t border-black/[0.05] dark:border-zinc-800">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 dark:bg-zinc-800">
-                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 dark:text-zinc-500">
-                        <circle cx="8" cy="6" r="3" /><path d="M2 14c0-3.3 2.7-5 6-5s6 1.7 6 5" />
-                      </svg>
-                    </div>
-                    <span className="text-[12px] text-slate-400 dark:text-zinc-500">
-                      Suggested: <span className="font-semibold text-slate-600 dark:text-zinc-300">{risk.suggestedOwner}</span> · {risk.suggestedOwnerTitle}
-                    </span>
+                  {/* Suggested owner — right panel */}
+                  <div className="flex-shrink-0 w-[200px] border-l border-black/[0.05] dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/30 p-5 flex flex-col items-center justify-center text-center">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-zinc-500 mb-3">AI-Suggested Owner</p>
+                    <img src={risk.avatarUrl} alt={risk.suggestedOwner} className="h-12 w-12 rounded-full object-cover mb-2" />
+                    <p className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100">{risk.suggestedOwner}</p>
+                    <p className="text-[11px] text-slate-400 dark:text-zinc-500">{risk.suggestedOwnerTitle}</p>
                   </div>
                 </div>
               </div>
@@ -283,26 +309,27 @@ function Dashboard({ onAssign }: { onAssign: () => void }) {
             ))}
           </div>
         </div>
+      </div>
 
-        {/* CTA */}
-        <div className="h-px bg-gradient-to-r from-transparent via-slate-300 dark:via-zinc-700 to-transparent" />
-        <div className="rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-2 shadow-[0_8px_28px_rgba(0,0,0,0.06)]">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-zinc-800 border border-black/[0.05] dark:border-zinc-700 flex-shrink-0 p-1.5">
-              <DiligentLogoFull />
+      {/* Floating prompt box */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+        <div className="mx-auto w-full max-w-3xl px-6 pb-5 pointer-events-auto">
+          <div className="rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl p-2 shadow-[0_-4px_32px_rgba(0,0,0,0.10)]">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-zinc-800 border border-black/[0.05] dark:border-zinc-700 flex-shrink-0 p-1.5">
+                <DiligentLogoFull />
+              </div>
+              <input
+                type="text"
+                placeholder="Ask about risks, assign owners, draft disclosures…"
+                className="flex-1 bg-transparent text-[14px] text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none"
+              />
+              <button className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 transition-colors flex-shrink-0">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2L7 9" /><path d="M14 2L9.5 14L7 9L2 6.5L14 2Z" />
+                </svg>
+              </button>
             </div>
-            <button
-              onClick={onAssign}
-              className="flex-1 text-left text-[14px] text-slate-400 dark:text-zinc-500"
-            >
-              Assign recommended risk owners…
-            </button>
-            <button
-              onClick={onAssign}
-              className="flex h-10 items-center gap-2 rounded-xl bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 px-5 text-[14px] font-normal hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 transition-colors flex-shrink-0"
-            >
-              Assign owners
-            </button>
           </div>
         </div>
       </div>
