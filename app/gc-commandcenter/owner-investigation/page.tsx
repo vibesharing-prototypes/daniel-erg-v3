@@ -604,7 +604,12 @@ function InvestigationContent() {
                 >
                   ← Back to status
                 </Link>
-                <span className="text-[12px] text-slate-300 dark:text-zinc-600">CRO Review — coming soon</span>
+                <Link
+                  href="/gc-commandcenter/cro-review"
+                  className="text-[13px] text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors"
+                >
+                  Continue to CRO Review →
+                </Link>
               </div>
             )}
           </div>
