@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { StakeholderFooter, PrototypeControlLink } from "../../superhero/StakeholderFooter";
 import { ProtoPanel } from "../../components/ProtoPanel";
 
@@ -17,6 +18,7 @@ const AVATARS: Record<string, string> = {
 const ASSIGNED_RISKS = [
   {
     id: "taiwan",
+    ownerId: "diana-reyes",
     name: "Taiwan Strait Geopolitical Tensions",
     severity: "Critical" as const,
     owner: "Diana Reyes",
@@ -27,6 +29,7 @@ const ASSIGNED_RISKS = [
   },
   {
     id: "cyber",
+    ownerId: "marcus-webb",
     name: "Critical Vendor Cybersecurity Breach",
     severity: "High" as const,
     owner: "Marcus Webb",
@@ -37,6 +40,7 @@ const ASSIGNED_RISKS = [
   },
   {
     id: "dma",
+    ownerId: "james-park",
     name: "EU Digital Markets Act Enforcement",
     severity: "High" as const,
     owner: "James Park",
@@ -173,9 +177,12 @@ export default function CommandCenterStatusPage() {
                         <p className="text-[11px] text-slate-400 dark:text-zinc-500">{risk.title}</p>
                       </div>
                     </div>
-                    <button className="text-[13px] font-normal text-slate-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 border border-black/[0.09] dark:border-zinc-700 rounded-xl py-[7px] px-3 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-200 dark:hover:border-zinc-600 transition-colors">
-                      Follow up
-                    </button>
+                    <Link
+                      href={`/gc-commandcenter/owner-investigation/notification?risk=${risk.id}&owner=${risk.ownerId}`}
+                      className="text-[13px] font-normal text-slate-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 border border-black/[0.09] dark:border-zinc-700 rounded-xl py-[7px] px-3 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-200 dark:hover:border-zinc-600 transition-colors"
+                    >
+                      View notification
+                    </Link>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-black/[0.05] dark:border-zinc-800">
