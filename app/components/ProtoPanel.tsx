@@ -25,7 +25,9 @@ export function ProtoPanel({
   onStateChange,
 }: ProtoPanelProps) {
   const [open, setOpen] = React.useState(false);
-  const [theme, setTheme] = React.useState<Theme>("light");
+  const [theme, setTheme] = React.useState<Theme>(() =>
+    typeof document !== "undefined" && document.documentElement.classList.contains("dark") ? "dark" : "light"
+  );
   const [state, setState] = React.useState<State>("calm");
   const styleRef = React.useRef<HTMLStyleElement | null>(null);
 
