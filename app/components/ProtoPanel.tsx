@@ -12,6 +12,7 @@ interface ProtoPanelProps {
   stateLabels?: [string, string, string];
   onThemeChange?: (theme: Theme) => void;
   onStateChange?: (state: State) => void;
+  children?: React.ReactNode;
 }
 
 const STATE_KEYS: State[] = ["calm", "busy", "critical"];
@@ -23,6 +24,7 @@ export function ProtoPanel({
   stateLabels = ["CALM", "BUSY", "CRITICAL"],
   onThemeChange,
   onStateChange,
+  children,
 }: ProtoPanelProps) {
   const [open, setOpen] = React.useState(false);
   const [theme, setTheme] = React.useState<Theme>(() =>
@@ -132,6 +134,12 @@ export function ProtoPanel({
           </>
         )}
 
+        {children && (
+          <>
+            {children}
+            <div className="pp-divider" />
+          </>
+        )}
         <p className="pp-description">{description}</p>
       </div>
     </div>
