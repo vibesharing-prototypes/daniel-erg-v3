@@ -339,12 +339,7 @@ export default function ReviewerPage() {
               return (
                 <div
                   key={source.name}
-                  className={cn(
-                    "rounded-[20px] border bg-white dark:bg-zinc-900 overflow-hidden transition-all duration-200",
-                    source.risksFound > 0
-                      ? "border-amber-200/60 dark:border-amber-900/60"
-                      : "border-black/[0.09] dark:border-zinc-700"
-                  )}
+                  className="rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden transition-all duration-200"
                 >
                   <div
                     className="flex items-center justify-between p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
@@ -356,6 +351,10 @@ export default function ReviewerPage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
+                          <span className={cn(
+                            "w-1.5 h-1.5 rounded-full flex-shrink-0",
+                            source.risksFound > 0 ? "bg-amber-400 dark:bg-amber-500" : "bg-emerald-400 dark:bg-emerald-500"
+                          )} />
                           <span className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100">{source.name}</span>
                           {source.moodysOnly && (
                             <span className="inline-flex items-center rounded-full border border-[#002B5C]/20 dark:border-sky-800 bg-[#002B5C]/5 dark:bg-sky-950/30 px-2 py-0.5 text-[10px] font-semibold text-[#002B5C] dark:text-sky-400">
@@ -438,25 +437,15 @@ export default function ReviewerPage() {
             {visibleRisks.map((risk, i) => (
               <div
                 key={risk.name}
-                className={cn(
-                  "rounded-[20px] border bg-white dark:bg-zinc-900 overflow-hidden",
-                  risk.severity === "critical" ? "border-red-200/60 dark:border-red-900/60" : "border-amber-200/60 dark:border-amber-900/60"
-                )}
+                className="rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden"
               >
                 <div
-                  className={cn(
-                    "px-4 py-3.5 cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors",
-                    risk.severity === "critical" && "bg-gradient-to-r from-red-50/60 dark:from-red-950/10 to-transparent",
-                    risk.severity === "high"     && "bg-gradient-to-r from-amber-50/60 dark:from-amber-950/10 to-transparent",
-                  )}
+                  className="px-4 py-3.5 cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
                   onClick={() => setExpandedRisk(expandedRisk === i ? null : i)}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className={cn(
-                        "flex h-8 w-8 items-center justify-center rounded-lg flex-shrink-0",
-                        risk.severity === "critical" ? "bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400" : "bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400"
-                      )}>
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg flex-shrink-0 bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
                           <path d="M12 9v4M12 17h.01"/>
@@ -464,6 +453,10 @@ export default function ReviewerPage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
+                          <span className={cn(
+                            "w-1.5 h-1.5 rounded-full flex-shrink-0",
+                            risk.severity === "critical" ? "bg-red-500 dark:bg-red-400" : "bg-amber-400 dark:bg-amber-500"
+                          )} />
                           <span className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100">{risk.name}</span>
                           <span className={cn(
                             "inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase",
