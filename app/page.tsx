@@ -84,10 +84,10 @@ const sections: Section[] = [
     steps: [
       {
         id: "F1",
-        title: "Draft 10-K Risk Disclosures",
-        description: "AI-assisted drafting of updated risk disclosure language.",
-        href: "/superhero/writer?risk=risk-taiwan&owner=diana-reyes",
-        enabled: false,
+        title: "GC Drafting Dashboard",
+        description: "General Counsel reviews AI-drafted 10-K disclosure language for 3 risks.",
+        href: "/gc-commandcenter/gc-drafting",
+        enabled: true,
       },
       {
         id: "F2",
