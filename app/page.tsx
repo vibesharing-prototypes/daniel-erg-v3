@@ -76,8 +76,8 @@ const sections: Section[] = [
         id: "1",
         title: "Review Detection Sources",
         description: "GC reviews what agents scanned and where the emerging risks originated.",
-        href: "/gc-commandcenter/gc-drafting",
-        enabled: true,
+        href: "/gc-commandcenter/detection-sources",
+        enabled: false,
       },
       {
         id: "2",
