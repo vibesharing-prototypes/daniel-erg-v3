@@ -23,12 +23,26 @@ type Section = {
 
 const sections: Section[] = [
   {
-    heading: "GRC Command Center",
+    heading: "Entry Points",
     steps: [
       {
-        id: "B1",
+        id: "A",
+        title: "Boards Home (Near-Term Vision)",
+        description: "GC opens the standard Boards system enhanced with the GRC Command Center panel.",
+        href: "/superhero/boards-home",
+        enabled: false,
+      },
+      {
+        id: "A2",
+        title: "Boards Home — Dark",
+        description: "Dark-mode variant of the Boards system with GRC Command Center panel.",
+        href: "/superhero/boards-dark",
+        enabled: false,
+      },
+      {
+        id: "B",
         title: "GRC Command Center",
-        description: "Agents detect emerging risks, GC assigns owners in one step.",
+        description: "GC opens the full GRC Command Center — agents have detected emerging risks.",
         href: "/gc-commandcenter",
         enabled: true,
       },
@@ -39,40 +53,68 @@ const sections: Section[] = [
         href: "/gc-commandcenter/status",
         enabled: true,
       },
+      {
+        id: "C",
+        title: "AI Risk Discovery (Light)",
+        description: "Diligent product view — AI-scanned risks from 98K+ filings with 3 new emerging risks flagged.",
+        href: "/superhero/risk-discovery",
+        enabled: false,
+      },
+      {
+        id: "C2",
+        title: "AI Risk Discovery (Dark)",
+        description: "Dark-mode variant of the AI Risk Discovery product view.",
+        href: "/superhero/risk-discovery-dark",
+        enabled: false,
+      },
     ],
   },
   {
-    heading: "Risk Owner Investigation",
+    heading: "General Counsel — Detection & Assignment",
     steps: [
       {
-        id: "C1",
-        title: "Owner Notification",
-        description: "Risk owner receives notification to begin investigation.",
+        id: "1",
+        title: "Review Detection Sources",
+        description: "GC reviews what agents scanned and where the emerging risks originated.",
+        href: "/gc-commandcenter/gc-drafting",
+        enabled: true,
+      },
+      {
+        id: "2",
+        title: "Assign Risk Owners",
+        description: "GC assigns owners to each detected risk and kicks off investigation workflows.",
+        href: "/superhero/coordinator",
+        enabled: false,
+      },
+    ],
+  },
+  {
+    heading: "Risk Owner & CRO",
+    steps: [
+      {
+        id: "3",
+        title: "Owner Investigation Notification",
+        description: "Diana Reyes receives an email notification to investigate Taiwan Strait risk.",
         href: "/gc-commandcenter/owner-investigation/notification?risk=taiwan&owner=diana-reyes",
         enabled: true,
       },
       {
-        id: "C2",
-        title: "Owner Investigation Interview",
-        description: "Risk owner provides context, validates severity, and confirms existing controls.",
+        id: "4",
+        title: "Owner Investigation",
+        description: "Risk owner investigates the risk, provides context, validates severity.",
         href: "/gc-commandcenter/owner-investigation?risk=taiwan&owner=diana-reyes",
         enabled: true,
       },
-    ],
-  },
-  {
-    heading: "CRO Review",
-    steps: [
       {
-        id: "D1",
-        title: "AI Risk Essentials",
-        description: "CRO dashboard — AI-discovered risks and investigation status.",
+        id: "5",
+        title: "CRO Review",
+        description: "Chief Risk Officer reviews the owner's findings and adds assessment.",
         href: "/gc-commandcenter/cro-review",
         enabled: true,
       },
       {
-        id: "D2",
-        title: "CRO Review",
+        id: "5b",
+        title: "CRO Review — Detail",
         description: "CRO reviews investigation findings for Taiwan Strait risk.",
         href: "/gc-commandcenter/cro-review/review?risk=taiwan&owner=diana-reyes",
         enabled: true,
@@ -83,36 +125,130 @@ const sections: Section[] = [
     heading: "General Counsel — Drafting & Review",
     steps: [
       {
-        id: "F1",
+        id: "6",
         title: "GC Drafting Dashboard",
         description: "General Counsel reviews AI-drafted 10-K disclosure language for 3 risks.",
         href: "/gc-commandcenter/gc-drafting",
         enabled: true,
       },
       {
-        id: "F2",
+        id: "7",
+        title: "GC Notification — Draft Ready",
+        description: "GC receives notification that the 10-K draft is ready for review.",
+        href: "/gc-commandcenter/gc-notification/draft-ready",
+        enabled: false,
+      },
+      {
+        id: "8",
         title: "GC Review & Context Packet",
         description: "GC reviews the 10-K, creates a Context Packet with peer filings and Q&A prep.",
         href: "/gc-commandcenter/gc-review",
         enabled: true,
       },
+      {
+        id: "9",
+        title: "Context Packet",
+        description: "Build a Context Packet with peer filings, transcripts, news, and Q&A prep.",
+        href: "/gc-commandcenter/context-packet",
+        enabled: false,
+      },
     ],
   },
   {
-    heading: "Approval & Filing",
+    heading: "Data Room & CEO Approval",
     steps: [
       {
-        id: "G1",
+        id: "10",
+        title: "Diligent Data Room",
+        description: "View the Context Packet and official documents in the Data Room.",
+        href: "/superhero/data-room",
+        enabled: false,
+      },
+      {
+        id: "11",
+        title: "Taiwan Strait — Detail",
+        description: "Drill into the Taiwan Strait context packet files.",
+        href: "/superhero/data-room/taiwan-strait",
+        enabled: false,
+      },
+      {
+        id: "12",
+        title: "CEO Notification",
+        description: "CEO receives consolidated notification for all undisclosed risks.",
+        href: "/superhero/ceo-review/notification",
+        enabled: false,
+      },
+      {
+        id: "13",
         title: "CEO Approval",
-        description: "CEO reviews disclosures, approves, and routes to committees.",
+        description: "CEO reviews disclosures, approves, and suggests additional committee routing.",
         href: "/superhero/ceo-review",
         enabled: false,
       },
       {
-        id: "H1",
-        title: "Board Review & EDGAR Filing",
-        description: "Committee review, final sign-off, and filing package.",
+        id: "13b",
+        title: "Approval Status",
+        description: "CEO disclosure approval page with pipeline status, documents, AI verification, and risk cards.",
+        href: "/superhero/approval-status",
+        enabled: false,
+      },
+    ],
+  },
+  {
+    heading: "Committee Review & Filing",
+    steps: [
+      {
+        id: "14",
+        title: "GC Mobile Notification — CEO Approved",
+        description: "GC notified that CEO approved and wants additional committees to review.",
+        href: "/superhero/gc-notification/ceo-approved",
+        enabled: false,
+      },
+      {
+        id: "15",
+        title: "Board Director Reviews in Boards",
+        description: "Board Director reviews 10-K risk factor update in Boards with GovernAI.",
+        href: "/superhero/board-governance",
+        enabled: false,
+      },
+      {
+        id: "16",
+        title: "GC — All Committee Members Reviewed",
+        description: "GC sees all committee members reviewed, EDGAR filing package is ready.",
         href: "/superhero/gc-committee-complete",
+        enabled: false,
+      },
+    ],
+  },
+  {
+    heading: "Standalone Visualizations",
+    steps: [
+      {
+        id: "13c",
+        title: "Risk Impact Visualization",
+        description: "AI-detected Taiwan Strait risk — supply chain dependency map, control coverage, and disclosure readiness.",
+        href: "/superhero/risk-analysis",
+        enabled: false,
+      },
+      {
+        id: "13d",
+        title: "Risk Gravity Map",
+        description: "Cinematic visualization of financial exposure pulled toward major enterprise risks with scenario simulation.",
+        href: "/superhero/risk-gravity",
+        enabled: false,
+      },
+      {
+        id: "13e",
+        title: "Risk Shockwave",
+        description: "Animated propagation from geopolitical signal to disclosure — 37 minutes across 5 enterprise functions.",
+        href: "/superhero/risk-shockwave",
+        enabled: false,
+      },
+      {
+        id: "13f",
+        title: "Risk-to-Disclosure Pipeline",
+        description: "7-stage pipeline from external signal to GC decision — traceability, evidence chain, and AI-drafted disclosure.",
+        href: "/superhero/risk-pipeline",
         enabled: false,
       },
     ],
@@ -170,7 +306,7 @@ export default function PrototypeIndex() {
             Prototype Index
           </h1>
           <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed mt-2 max-w-xl">
-            The GRC Command Center flow is active. Other sections are preserved from the V2 prototype and will be rebuilt to match the new visual direction.
+            Full V2 flow mapped below. Enabled steps are live in V3. Disabled steps are coming soon.
           </p>
         </div>
       </div>
