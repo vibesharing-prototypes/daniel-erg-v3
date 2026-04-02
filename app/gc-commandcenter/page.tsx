@@ -372,9 +372,16 @@ function FloatingPrompt() {
 
 function PageContent() {
   const searchParams = useSearchParams();
-  const direct = searchParams.get("direct") === "1";
-  const [scanModalOpen, setScanModalOpen] = React.useState(!direct);
-  const [scanDone, setScanDone] = React.useState(direct);
+  const [scanModalOpen, setScanModalOpen] = React.useState(true);
+  const [scanDone, setScanDone] = React.useState(false);
+
+  // Skip modal when ?direct=1
+  React.useEffect(() => {
+    if (searchParams.get("direct") === "1") {
+      setScanModalOpen(false);
+      setScanDone(true);
+    }
+  }, [searchParams]);
   const [showToast, setShowToast] = React.useState(false);
   const [restartTrigger, setRestartTrigger] = React.useState(0);
 
