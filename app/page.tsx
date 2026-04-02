@@ -53,20 +53,6 @@ const sections: Section[] = [
         href: "/gc-commandcenter/status",
         enabled: true,
       },
-      {
-        id: "C",
-        title: "AI Risk Discovery (Light)",
-        description: "Diligent product view — AI-scanned risks from 98K+ filings with 3 new emerging risks flagged.",
-        href: "/superhero/risk-discovery",
-        enabled: false,
-      },
-      {
-        id: "C2",
-        title: "AI Risk Discovery (Dark)",
-        description: "Dark-mode variant of the AI Risk Discovery product view.",
-        href: "/superhero/risk-discovery-dark",
-        enabled: false,
-      },
     ],
   },
   {
