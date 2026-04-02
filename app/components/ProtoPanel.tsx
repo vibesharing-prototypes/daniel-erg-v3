@@ -93,7 +93,7 @@ export function ProtoPanel({
             <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M8 2L4 6l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            INDEX
+            BACK TO INDEX
           </a>
           <span className="pp-mini-divider" />
           <span className="pp-chevron" aria-label="Toggle prototype controls">
