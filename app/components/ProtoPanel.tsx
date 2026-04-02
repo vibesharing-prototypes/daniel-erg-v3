@@ -84,10 +84,23 @@ export function ProtoPanel({
         }}
       >
         <span className="pp-label">PROTOTYPE CONTROLS &mdash; NOT PART OF THE PRODUCT</span>
-        <span className="pp-chevron" aria-label="Toggle prototype controls">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+        <span className="pp-right-actions">
+          <a
+            href="/"
+            className="pp-index-link"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M8 2L4 6l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            INDEX
+          </a>
+          <span className="pp-mini-divider" />
+          <span className="pp-chevron" aria-label="Toggle prototype controls">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </span>
         </span>
       </div>
 
@@ -199,6 +212,39 @@ const PANEL_CSS = `
     color: #909093;
     transition: color 0.15s;
     white-space: nowrap;
+  }
+
+  .pp-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .pp-index-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: #6a6a6d;
+    text-decoration: none;
+    padding: 3px 8px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+  .pp-index-link:hover {
+    color: #c0c0c3;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .pp-mini-divider {
+    width: 1px;
+    height: 14px;
+    background: #2e2e32;
+    flex-shrink: 0;
   }
 
   .pp-chevron {
