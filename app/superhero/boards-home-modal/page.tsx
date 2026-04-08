@@ -1,0 +1,1021 @@
+"use client";
+
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ProtoPanel } from "../../components/ProtoPanel";
+
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+/* ------------------------------------------------------------------ */
+/*  Diligent Logo                                                      */
+/* ------------------------------------------------------------------ */
+
+function DiligentLogo({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 222 222" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+      <g>
+        <path fill="#EE312E" d="M200.87,110.85c0,33.96-12.19,61.94-33.03,81.28c-0.24,0.21-0.42,0.43-0.66,0.64c-15.5,14.13-35.71,23.52-59.24,27.11l-1.59-1.62l35.07-201.75l1.32-3.69C178.64,30.36,200.87,65.37,200.87,110.85z"/>
+        <path fill="#AF292E" d="M142.75,12.83l-0.99,1.47L0.74,119.34L0,118.65c0,0,0-0.03,0-0.06V0.45h85.63c5.91,0,11.64,0.34,17.19,1.01h0.21c14.02,1.66,26.93,5.31,38.48,10.78C141.97,12.46,142.75,12.83,142.75,12.83z"/>
+        <path fill="#D3222A" d="M142.75,12.83L0,118.65v99.27v3.62h85.96c7.61,0,14.94-0.58,21.99-1.66C107.95,219.89,142.75,12.83,142.75,12.83z"/>
+      </g>
+    </svg>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Icon Components                                                    */
+/* ------------------------------------------------------------------ */
+
+function IconBook() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+    </svg>
+  );
+}
+
+function IconFolder() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+    </svg>
+  );
+}
+
+function IconBarChart() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="20" x2="12" y2="10" /><line x1="18" y1="20" x2="18" y2="4" /><line x1="6" y1="20" x2="6" y2="16" />
+    </svg>
+  );
+}
+
+function IconGraduationCap() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 10l-10-5L2 10l10 5 10-5z" /><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5" />
+    </svg>
+  );
+}
+
+function IconUsers() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" />
+    </svg>
+  );
+}
+
+function IconClock() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
+function IconClipboard() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" /><rect x="8" y="2" width="8" height="4" rx="1" />
+    </svg>
+  );
+}
+
+function IconCalendar() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  );
+}
+
+function IconExternalLink() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
+    </svg>
+  );
+}
+
+function IconChevronDown() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
+function IconSearch() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
+function IconBell() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 01-3.46 0" />
+    </svg>
+  );
+}
+
+function IconMessageCircle() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
+    </svg>
+  );
+}
+
+function IconHelp() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  );
+}
+
+function IconSettings() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+    </svg>
+  );
+}
+
+function IconFileText() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" />
+    </svg>
+  );
+}
+
+function IconCheckCircle() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 11-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  );
+}
+
+function IconMoreVertical() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="5" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="12" cy="19" r="1" />
+    </svg>
+  );
+}
+
+function IconSparkles() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z" fill="#7c3aed" stroke="#7c3aed" />
+    </svg>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Data                                                               */
+/* ------------------------------------------------------------------ */
+
+type NavItem = {
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+  external?: boolean;
+  separator?: boolean;
+};
+
+const NAV_ITEMS: NavItem[] = [
+  { icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>, label: "Walmart U.S", external: true },
+  { separator: true, icon: null, label: "" },
+  { icon: <IconBook />, label: "Books" },
+  { icon: <IconFolder />, label: "Resource Center" },
+  { separator: true, icon: null, label: "" },
+  { icon: <IconClock />, label: "Minutes", external: true },
+  { icon: <IconFileText />, label: "Data Room", external: true },
+  { icon: <IconClipboard />, label: "Questionnaires", external: true },
+  { separator: true, icon: null, label: "" },
+  { icon: <IconBarChart />, label: "GRC Reporting" },
+  { icon: <IconGraduationCap />, label: "Education & Templates" },
+  { icon: <IconCalendar />, label: "Calendar" },
+  { separator: true, icon: null, label: "" },
+  { icon: <IconUsers />, label: "Open Director View", external: true },
+  { icon: <IconSettings />, label: "Site Management", external: true },
+];
+
+const NEWS_ARTICLES = [
+  {
+    title: "Alaska-Hawaiian merger gets pushback from United Airlines",
+    source: "Samoa News",
+    date: "Sep 4, 2024",
+    summary: "United Airlines is opposing the proposed merger between Alaska Airlines and Hawaiian Airlines.",
+  },
+  {
+    title: "Elliott Crosses 10% Threshold In Southwest To Call For Special Meeting",
+    source: "RTT News",
+    date: "Sep 3, 2024",
+    summary: "Activist investor Elliott Management has increased its stake in Southwest Airlines to over 10%.",
+  },
+  {
+    title: "Air France-KLM snatches up 20 percent of SAS Airline",
+    source: "NL Times",
+    date: "Aug 31, 2024",
+    summary: "Air France-KLM has acquired a 20% stake in Scandinavian Airlines (SAS).",
+  },
+];
+
+const BOOKS = [
+  {
+    id: "1",
+    title: "Strategic Vision 2025: Global Growth and Innovation Roadmap",
+    meeting: "Meeting: September 14, 2023 · Marketing and Branding Subcommittee",
+    badges: ["New", "Approval required"],
+    extra: "+1",
+  },
+  {
+    id: "2",
+    title: "Strategic Vision 2025: Global Growth and Innovation Roadmap",
+    meeting: "Meeting: September 14, 2023 · Marketing and Branding Subcommittee",
+    badges: ["New"],
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Scan hook (shared between widget and modal)                        */
+/* ------------------------------------------------------------------ */
+
+const SCAN_AGENTS = [
+  { id: "risk", label: "Risk Intelligence", detail: "Scanning global news feeds and media sources…" },
+  { id: "vendor", label: "Vendor Intelligence", detail: "Monitoring third-party risk networks…" },
+  { id: "reg", label: "Regulatory Watch", detail: "Reviewing SEC filings, EU regulatory databases…" },
+  { id: "board", label: "Board Materials Agent", detail: "Comparing board decks against regulatory findings…" },
+  { id: "supply", label: "Supply Chain Data", detail: "Analyzing supplier contracts and geographic exposure…" },
+];
+
+type ScanPhase = "init" | "scanning" | "analyzing" | "detected" | "ready";
+
+function useScan() {
+  const [phase, setPhase] = useState<ScanPhase>("init");
+  const [visibleAgents, setVisibleAgents] = useState(0);
+  const [completedAgents, setCompletedAgents] = useState(0);
+  const [anomalyCount, setAnomalyCount] = useState(0);
+
+  useEffect(() => {
+    const t = setTimeout(() => setPhase("scanning"), 800);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (phase !== "scanning" || visibleAgents >= SCAN_AGENTS.length) return;
+    const t = setTimeout(() => setVisibleAgents((v) => v + 1), 400);
+    return () => clearTimeout(t);
+  }, [phase, visibleAgents]);
+
+  useEffect(() => {
+    if (phase !== "scanning") return;
+    if (visibleAgents > 0 && completedAgents < visibleAgents) {
+      const t = setTimeout(() => setCompletedAgents((v) => v + 1), 600);
+      return () => clearTimeout(t);
+    }
+    if (completedAgents === SCAN_AGENTS.length) {
+      const t = setTimeout(() => setPhase("analyzing"), 350);
+      return () => clearTimeout(t);
+    }
+  }, [phase, visibleAgents, completedAgents]);
+
+  useEffect(() => {
+    if (phase !== "analyzing") return;
+    const t = setTimeout(() => setPhase("detected"), 700);
+    return () => clearTimeout(t);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== "detected") return;
+    const steps = [1, 2, 3];
+    const timers = steps.map((n, i) => setTimeout(() => setAnomalyCount(n), (i + 1) * 200));
+    const final = setTimeout(() => setPhase("ready"), steps.length * 200 + 400);
+    return () => { timers.forEach(clearTimeout); clearTimeout(final); };
+  }, [phase]);
+
+  const skip = useCallback(() => {
+    setPhase("ready");
+    setVisibleAgents(SCAN_AGENTS.length);
+    setCompletedAgents(SCAN_AGENTS.length);
+    setAnomalyCount(3);
+  }, []);
+
+  return { phase, visibleAgents, completedAgents, anomalyCount, skip };
+}
+
+/* ------------------------------------------------------------------ */
+/*  GRC Command Center Modal Content                                   */
+/* ------------------------------------------------------------------ */
+
+function GrcModalContent({ scan, onClose }: {
+  scan: ReturnType<typeof useScan>;
+  onClose: () => void;
+}) {
+  const router = useRouter();
+  const { phase, visibleAgents, completedAgents, anomalyCount, skip } = scan;
+  const isReady = phase === "ready";
+
+  return (
+    <div className="flex flex-col h-full min-h-0 overflow-hidden rounded-3xl">
+      {/* Header */}
+      <div className="h-14 flex items-center justify-between px-6 border-b border-black/[0.05] dark:border-zinc-800 flex-shrink-0 bg-[#f7f7f8] dark:bg-zinc-900">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-black/[0.09] dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 p-1">
+            <DiligentLogo className="h-5 w-5" />
+          </div>
+          <h2 className="text-[16px] font-semibold text-slate-800 dark:text-zinc-100">GRC Command Center</h2>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href="/gc-commandcenter?direct=1" className="flex items-center gap-1.5 rounded-xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-1.5 text-[12px] text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-700 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
+            Full view
+          </Link>
+          <button onClick={onClose} className="flex items-center gap-1.5 rounded-xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-1.5 text-[12px] text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-700 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 6l4 4 4-4" />
+            </svg>
+            Collapse
+          </button>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        {!isReady ? (
+          /* Scan progress */
+          <div className="max-w-lg mx-auto px-6 py-10">
+            <div className="text-center mb-8">
+              <h3 className="text-[22px] font-semibold text-slate-800 dark:text-zinc-100">
+                {phase === "init" ? "Initializing agents" : phase === "scanning" ? "Scanning enterprise sources" : phase === "analyzing" ? "Cross-referencing findings" : `${anomalyCount} risks detected`}
+              </h3>
+              <p className="text-[13px] text-slate-500 dark:text-zinc-400 mt-1">
+                {phase === "init" && "Preparing GRC monitoring agents…"}
+                {phase === "scanning" && `${completedAgents}/${SCAN_AGENTS.length} agents complete`}
+                {phase === "analyzing" && "Comparing board materials with regulatory findings…"}
+                {phase === "detected" && "Finalizing risk assessment…"}
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              {phase === "init" ? (
+                <div className="flex justify-center py-4">
+                  <div className="w-6 h-6 border-2 border-slate-300 dark:border-zinc-600 border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : (
+                SCAN_AGENTS.slice(0, visibleAgents).map((agent, i) => {
+                  const done = i < completedAgents;
+                  return (
+                    <div
+                      key={agent.id}
+                      className={cn(
+                        "flex items-center gap-3 rounded-xl border px-4 py-3 transition-all duration-300",
+                        done
+                          ? "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/30 dark:bg-emerald-950/10"
+                          : "border-black/[0.05] dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/50"
+                      )}
+                      style={{ animation: "fadeSlideUp 0.35s ease-out both", animationDelay: `${i * 80}ms` }}
+                    >
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg flex-shrink-0">
+                        {done ? (
+                          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/40">
+                            <svg className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+                          </div>
+                        ) : (
+                          <div className="w-5 h-5 border-2 border-slate-300 dark:border-zinc-600 border-t-transparent rounded-full animate-spin" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] font-semibold text-slate-700 dark:text-zinc-200">{agent.label}</p>
+                        <p className="text-[11px] text-slate-400 dark:text-zinc-500">{agent.detail}</p>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+
+              {phase === "analyzing" && (
+                <div className="flex items-center gap-3 rounded-xl border border-violet-200 dark:border-violet-900/40 bg-violet-50/50 dark:bg-violet-950/10 px-4 py-3">
+                  <div className="w-5 h-5 border-2 border-violet-400 dark:border-violet-500 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                  <p className="text-[13px] font-semibold text-violet-600 dark:text-violet-400">Cross-referencing board materials…</p>
+                </div>
+              )}
+
+              {(phase === "detected") && anomalyCount > 0 && (
+                <div className="rounded-xl border border-red-200 dark:border-red-900/40 bg-red-50/60 dark:bg-red-950/10 px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 flex-shrink-0">
+                      <svg className="w-3.5 h-3.5 text-red-600 dark:text-red-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M8 1.5L1 14h14L8 1.5Z" /><path d="M8 6v3.5" /><circle cx="8" cy="11.5" r="0.5" fill="currentColor" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-[13px] font-semibold text-red-700 dark:text-red-400">{anomalyCount} emerging risk{anomalyCount !== 1 ? "s" : ""} detected</p>
+                      <p className="text-[11px] text-red-500/70 dark:text-red-400/50">Not captured in current filings or board materials</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button onClick={skip} className="block mx-auto mt-6 text-[11px] text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 transition-colors">
+              Skip scan
+            </button>
+          </div>
+        ) : (
+          /* Post-scan: full GRC content */
+          <div className="max-w-2xl mx-auto px-6 py-6 space-y-5">
+
+            {/* Emerging risks alert card */}
+            <div className="rounded-[20px] border border-red-200 dark:border-red-900/40 bg-white dark:bg-zinc-900 overflow-hidden relative">
+              <div className="absolute top-0 left-0 right-0 h-20 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(239,68,68,0.07) 0%, transparent 100%)" }} />
+              <div className="relative p-5 space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 flex-shrink-0">
+                    <svg className="w-3.5 h-3.5 text-red-600 dark:text-red-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M8 1.5L1 14h14L8 1.5Z" /><path d="M8 6v3.5" /><circle cx="8" cy="11.5" r="0.5" fill="currentColor" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-[15px] font-semibold text-red-700 dark:text-red-400">Agents Detected Emerging Risks</p>
+                    <p className="text-[12px] text-red-500/70 dark:text-red-400/50 mt-0.5">3 risks require disclosure review</p>
+                  </div>
+                </div>
+
+                <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">
+                  Monitoring agents detected emerging risks not adequately disclosed in current SEC filings or Board materials. Review recommended before the Feb 28 Board meeting.
+                </p>
+
+                {/* Risk severity list */}
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="inline-flex items-center rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 px-2.5 py-0.5 text-[10px] font-semibold text-red-700 dark:text-red-400">1 Critical</span>
+                    </div>
+                    <div className="group relative inline-flex items-center gap-1.5 pl-1 cursor-help">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 text-slate-300 dark:text-zinc-600 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>
+                      <p className="text-[13px] text-slate-600 dark:text-zinc-300 leading-relaxed">Taiwan Strait Geopolitical Tensions</p>
+                      <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-800 p-3.5 text-[12px] text-slate-500 dark:text-zinc-400 leading-relaxed shadow-[0_8px_28px_rgba(0,0,0,0.12)] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-20">
+                        Escalating tensions in the Taiwan Strait may disrupt semiconductor supply chain. 47% of our chip suppliers have Taiwan-based operations.
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="inline-flex items-center rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-2.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-400">2 High</span>
+                    </div>
+                    <div className="space-y-1.5 pl-1">
+                      <div className="group relative inline-flex items-center gap-1.5 cursor-help">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 text-slate-300 dark:text-zinc-600 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>
+                        <p className="text-[13px] text-slate-600 dark:text-zinc-300 leading-relaxed">Critical Vendor Cybersecurity Breach</p>
+                        <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-800 p-3.5 text-[12px] text-slate-500 dark:text-zinc-400 leading-relaxed shadow-[0_8px_28px_rgba(0,0,0,0.12)] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-20">
+                          CloudSecure Inc. disclosed a ransomware incident. They process customer PII under 3 data processing agreements.
+                        </div>
+                      </div>
+                      <div className="group relative inline-flex items-center gap-1.5 cursor-help">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 text-slate-300 dark:text-zinc-600 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>
+                        <p className="text-[13px] text-slate-600 dark:text-zinc-300 leading-relaxed">EU Digital Markets Act Enforcement</p>
+                        <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-800 p-3.5 text-[12px] text-slate-500 dark:text-zinc-400 leading-relaxed shadow-[0_8px_28px_rgba(0,0,0,0.12)] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-20">
+                          EC initiated enforcement actions against 3 companies in our sector for DMA non-compliance. Our EU operations may face similar scrutiny.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Status note */}
+                <div className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-zinc-800 px-3 py-2 border border-black/[0.05] dark:border-zinc-700">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 text-emerald-500 dark:text-emerald-400"><polyline points="20 6 9 17 4 12" /></svg>
+                  <p className="text-[11px] text-slate-500 dark:text-zinc-400 leading-snug">Risk Essentials AI updated, risk team notified.</p>
+                </div>
+
+                {/* Recommendation */}
+                <div className="border-t border-black/[0.05] dark:border-zinc-800 pt-3">
+                  <p className="text-[11px] font-semibold text-red-600 dark:text-red-400 mb-1.5">Recommendation:</p>
+                  <div className="space-y-1.5 text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">
+                    <div className="flex gap-1.5">
+                      <span className="flex-shrink-0">1.</span>
+                      <span><Link href="/gc-commandcenter?direct=1" className="text-blue-600 dark:text-blue-400 hover:underline underline-offset-2 transition-colors">Assign Risk Owners</Link> to provide context</span>
+                    </div>
+                    <div className="flex gap-1.5">
+                      <span className="flex-shrink-0">2.</span>
+                      <span>Decide if risks should be disclosed in 10-Q <span className="font-semibold text-red-600 dark:text-red-400">(13 days)</span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-zinc-700 to-transparent" />
+
+            {/* Other things on your plate */}
+            <div>
+              <h3 className="text-[14px] font-semibold text-slate-800 dark:text-zinc-100 mb-3">Other things on your plate</h3>
+              <div className="space-y-2">
+                {[
+                  { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2" /><circle cx="8.5" cy="7" r="4" /><line x1="20" y1="8" x2="20" y2="14" /><line x1="23" y1="11" x2="17" y2="11" /></svg>, label: "Begin new director appointment" },
+                  { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>, label: "Review latest M&A opportunities" },
+                  { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>, label: "New audit report available" },
+                ].map((item) => (
+                  <button key={item.label} className="flex items-center gap-2.5 w-full rounded-xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3.5 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-200 dark:hover:border-zinc-600 transition-all group">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-zinc-700 flex-shrink-0 text-slate-500 dark:text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {item.icon}
+                    </div>
+                    <span className="text-[13px] text-slate-600 dark:text-zinc-300">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom prompt bar */}
+      {isReady && (
+        <div className="border-t border-black/[0.05] dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/30 p-4 flex-shrink-0">
+          <div className="max-w-2xl mx-auto relative">
+            <input
+              type="text"
+              defaultValue="Show me suggested Risk Owners…"
+              className="w-full rounded-full border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 pl-4 pr-10 py-2.5 text-[13px] text-slate-700 dark:text-zinc-200 placeholder-slate-400 dark:placeholder-zinc-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+            <button
+              onClick={() => router.push("/gc-commandcenter?direct=1")}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-900 dark:hover:bg-white transition-colors"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg>
+            </button>
+          </div>
+          <p className="text-[9px] text-slate-400 dark:text-zinc-500 mt-1.5 text-center">
+            AI-generated content may have inaccuracies.{" "}
+            <button className="font-medium underline hover:text-slate-600 dark:hover:text-zinc-300">Learn more</button>
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Floating Widget                                                    */
+/* ------------------------------------------------------------------ */
+
+function GrcWidget({ scan, onClick }: {
+  scan: ReturnType<typeof useScan>;
+  onClick: () => void;
+}) {
+  const { phase, completedAgents } = scan;
+  const isReady = phase === "ready";
+  const isScanning = phase === "scanning" || phase === "init";
+  const isAnalyzing = phase === "analyzing" || phase === "detected";
+
+  return (
+    <div className="fixed bottom-6 left-1/2 z-[100] w-[540px] -ml-[270px]" style={{ animation: "grcWidgetIn 0.5s cubic-bezier(0.22,1,0.36,1) both" }}>
+      <button
+        onClick={onClick}
+        className={cn(
+          "relative w-full flex items-center gap-4 rounded-[20px] border bg-white dark:bg-zinc-900 px-5 py-3.5 cursor-pointer transition-all duration-300 group",
+          "shadow-[0_12px_40px_rgba(0,0,0,0.14),0_0_0_1px_rgba(0,0,0,0.03)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)]",
+          "hover:shadow-[0_16px_48px_rgba(0,0,0,0.2)] hover:-translate-y-0.5",
+          isReady
+            ? "border-red-200 dark:border-red-900/40"
+            : "border-black/[0.09] dark:border-zinc-700"
+        )}
+      >
+        {/* Glow effect for alert state */}
+        {isReady && (
+          <div className="absolute inset-0 rounded-[20px] pointer-events-none" style={{ animation: "grcWidgetGlow 2.5s ease-in-out infinite", boxShadow: "0 0 20px rgba(239,68,68,0.15), inset 0 0 20px rgba(239,68,68,0.03)" }} />
+        )}
+
+        {/* Logo */}
+        <div className="flex items-center justify-center flex-shrink-0">
+          <DiligentLogo className="h-7 w-7" />
+        </div>
+
+        {/* Content — fixed layout, text truncates instead of reflowing */}
+        <div className="text-left flex-1 min-w-0">
+          <p className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100 leading-tight">GRC Command Center</p>
+          <div className="flex items-center gap-2 mt-1 h-[18px]">
+            {isReady ? (
+              <>
+                <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+                </span>
+                <p className="text-[12px] font-semibold text-red-600 dark:text-red-400 truncate">3 emerging risks require disclosure review</p>
+              </>
+            ) : isAnalyzing ? (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-violet-400 dark:border-violet-500 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                <p className="text-[12px] text-violet-600 dark:text-violet-400 font-medium truncate">Cross-referencing findings…</p>
+              </>
+            ) : (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-slate-400 dark:border-zinc-500 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                <p className="text-[12px] text-slate-500 dark:text-zinc-400 truncate">Scanning enterprise sources… {completedAgents}/{SCAN_AGENTS.length} agents</p>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Right section — fixed width so layout doesn't shift */}
+        <div className="flex items-center gap-2 flex-shrink-0 w-[150px] justify-end">
+          {/* Progress dots (scanning) / Severity badges (ready) */}
+          {isReady ? (
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-1" title="1 Critical">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-shrink-0 text-red-500 dark:text-red-400">
+                  <path d="M8 1.5L1 14h14L8 1.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M8 6v3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <circle cx="8" cy="11.5" r="0.5" fill="currentColor" />
+                </svg>
+                <span className="text-[14px] font-semibold text-red-600 dark:text-red-400">1</span>
+              </div>
+              <div className="flex items-center gap-1" title="2 High">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-shrink-0 text-amber-500 dark:text-amber-400">
+                  <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M8 5v3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <circle cx="8" cy="11" r="0.5" fill="currentColor" />
+                </svg>
+                <span className="text-[14px] font-semibold text-amber-600 dark:text-amber-400">2</span>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5">
+              {SCAN_AGENTS.map((_, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all duration-500",
+                    i < completedAgents
+                      ? "bg-emerald-500 dark:bg-emerald-400"
+                      : i === completedAgents && isScanning
+                        ? "bg-slate-400 dark:bg-zinc-500 animate-pulse"
+                        : "bg-slate-200 dark:bg-zinc-700"
+                  )}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Open indicator */}
+          <div className={cn(
+            "flex h-8 w-8 items-center justify-center rounded-xl flex-shrink-0 transition-colors",
+            isReady
+              ? "bg-red-50 dark:bg-red-950/20 text-red-500 dark:text-red-400 group-hover:bg-red-100 dark:group-hover:bg-red-950/40"
+              : "bg-slate-100 dark:bg-zinc-800 text-slate-400 dark:text-zinc-500 group-hover:bg-slate-200 dark:group-hover:bg-zinc-700"
+          )}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 10l4-4 4 4" />
+            </svg>
+          </div>
+        </div>
+      </button>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Page Component                                                     */
+/* ------------------------------------------------------------------ */
+
+export default function BoardsHomeModalPage() {
+  const [booksTab, setBooksTab] = useState<"all" | "books" | "reports">("all");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalClosing, setModalClosing] = useState(false);
+  const scan = useScan();
+
+  const handleClose = useCallback(() => {
+    setModalClosing(true);
+    setTimeout(() => {
+      setModalOpen(false);
+      setModalClosing(false);
+    }, 120);
+  }, []);
+
+  return (
+    <div className="h-screen flex flex-col overflow-hidden bg-[#f0f0f1] dark:bg-zinc-950">
+      <ProtoPanel
+        description="Boards Home \u2014 GRC Command Center modal variant"
+        stateToggle={false}
+      />
+
+      {/* Main layout — 3 columns, no side panel */}
+      <div className="flex flex-1 min-h-0 overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 bg-[#f0f2f5] dark:bg-zinc-950">
+
+          {/* Top bar */}
+          <header className="h-12 bg-white dark:bg-zinc-900 border-b border-[#e2e5e9] dark:border-zinc-800 flex items-center px-4 flex-shrink-0 z-10">
+            <div className="flex items-center gap-2.5 pl-1">
+              <DiligentLogo className="h-6 w-6" />
+              <span className="text-sm font-semibold text-[#374151] dark:text-zinc-100">Boards</span>
+              <span className="text-xs text-[#9ca3af] dark:text-zinc-500">(GC view)</span>
+            </div>
+            <div className="flex-1" />
+            <div className="flex items-center gap-1">
+              {[<IconBell key="bell" />, <IconMessageCircle key="msg" />, <IconHelp key="help" />, <IconSettings key="set" />].map((icon, i) => (
+                <button key={i} className="flex h-9 w-9 items-center justify-center rounded-lg text-[#6b7280] dark:text-zinc-400 hover:bg-[#f3f4f6] dark:hover:bg-zinc-800 transition-colors">
+                  {icon}
+                </button>
+              ))}
+            </div>
+          </header>
+
+          <div className="flex flex-1 overflow-y-auto">
+
+            {/* Left Sidebar */}
+            <aside className="w-[210px] flex-shrink-0 bg-white dark:bg-zinc-900 border-r border-[#e2e5e9] dark:border-zinc-800 flex flex-col self-stretch">
+              <div className="px-4 py-4 flex items-center gap-2">
+                <div className="flex h-7 w-7 items-center justify-center rounded bg-[#2563eb]">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>
+                </div>
+                <span className="text-sm font-semibold text-[#2563eb]">Walmart</span>
+              </div>
+              <nav className="flex-1 py-1 px-2">
+                {NAV_ITEMS.map((item, i) => {
+                  if (item.separator) return <div key={i} className="my-2 mx-3 border-t border-[#e2e5e9] dark:border-zinc-800" />;
+                  return (
+                    <button
+                      key={item.label}
+                      className={cn(
+                        "flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm transition-colors text-left",
+                        item.active
+                          ? "bg-[#eff6ff] dark:bg-blue-950/30 text-[#2563eb] font-medium"
+                          : "text-[#374151] dark:text-zinc-300 hover:bg-[#f3f4f6] dark:hover:bg-zinc-800"
+                      )}
+                    >
+                      <span className={cn(item.active ? "text-[#2563eb]" : "text-[#6b7280] dark:text-zinc-500")}>{item.icon}</span>
+                      <span className="flex-1">{item.label}</span>
+                      {item.external && <span className="text-[#2563eb]"><IconExternalLink /></span>}
+                    </button>
+                  );
+                })}
+              </nav>
+              <div className="px-4 py-3 border-t border-[#e2e5e9] dark:border-zinc-800 flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <DiligentLogo className="h-4 w-4" />
+                  <span className="text-xs font-semibold text-[#111827] dark:text-zinc-200">Diligent</span>
+                </div>
+                <span className="text-[10px] text-[#9ca3af] dark:text-zinc-600">1.25…</span>
+              </div>
+            </aside>
+
+            {/* Main Content */}
+            <main className="flex-1 min-w-0">
+              <div className="max-w-[780px] mx-auto px-6 py-6 space-y-5">
+
+                {/* Search bar */}
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] dark:text-zinc-500">
+                    <IconSearch />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search all your board books, decisions, minutes, and even voting records..."
+                    className="w-full rounded-lg border border-[#d1d5db] dark:border-zinc-700 bg-white dark:bg-zinc-900 pl-10 pr-4 py-2 text-sm text-[#374151] dark:text-zinc-200 placeholder-[#9ca3af] dark:placeholder-zinc-500 focus:border-[#3b82f6] focus:outline-none focus:ring-1 focus:ring-[#3b82f6]"
+                  />
+                </div>
+
+                {/* Awaiting review */}
+                <div className="rounded-xl border border-[#e2e5e9] dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3">
+                  <h2 className="text-sm font-semibold text-[#111827] dark:text-zinc-100 mb-1">Awaiting review</h2>
+                  <div>
+                    {[
+                      { icon: <IconClipboard />, label: "Questionnaires", count: 1 },
+                      { icon: <IconCheckCircle />, label: "Approvals", count: 1 },
+                      { icon: <IconClock />, label: "Minutes", count: 1 },
+                    ].map((item) => (
+                      <button key={item.label} className="flex items-center justify-between w-full rounded-lg px-2 py-2 hover:bg-[#f9fafb] dark:hover:bg-zinc-800 transition-colors group">
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-[#6b7280] dark:text-zinc-500">{item.icon}</span>
+                          <span className="text-sm font-medium text-[#374151] dark:text-zinc-200">{item.label}</span>
+                          <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#dc2626] px-1.5 text-[11px] font-semibold text-white">
+                            {item.count}
+                          </span>
+                        </div>
+                        <span className="text-[#d1d5db] dark:text-zinc-700 group-hover:text-[#9ca3af] dark:group-hover:text-zinc-500">
+                          <IconChevronDown />
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Books and reports */}
+                <div>
+                  <h2 className="text-base font-semibold text-[#111827] dark:text-zinc-100 mb-3">Books and reports</h2>
+                  <div className="flex items-center gap-1 mb-4 border-b border-[#e2e5e9] dark:border-zinc-800">
+                    {(["all", "books", "reports"] as const).map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => setBooksTab(tab)}
+                        className={cn(
+                          "px-3 py-2 text-sm font-medium capitalize border-b-2 -mb-px transition-colors",
+                          booksTab === tab
+                            ? "border-[#2563eb] text-[#2563eb]"
+                            : "border-transparent text-[#6b7280] dark:text-zinc-400 hover:text-[#374151] dark:hover:text-zinc-200"
+                        )}
+                      >
+                        {tab === "all" ? "All" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="space-y-4">
+                    {BOOKS.map((book) => (
+                      <div key={book.id} className="rounded-xl border border-[#e2e5e9] dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-[#6b7280] dark:text-zinc-500"><IconFileText /></span>
+                          {book.badges.map((badge) => (
+                            <span
+                              key={badge}
+                              className={cn(
+                                "rounded px-2 py-0.5 text-xs font-medium",
+                                badge === "Approval required"
+                                  ? "bg-[#fef2f2] dark:bg-red-950/30 text-[#dc2626] dark:text-red-400"
+                                  : "bg-[#eff6ff] dark:bg-blue-950/30 text-[#2563eb] dark:text-blue-400"
+                              )}
+                            >
+                              {badge}
+                            </span>
+                          ))}
+                        </div>
+                        <h3 className="text-sm font-semibold text-[#111827] dark:text-zinc-100 mb-1">{book.title}</h3>
+                        <p className="text-xs text-[#6b7280] dark:text-zinc-400">
+                          {book.meeting}
+                          {book.extra && <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#e5e7eb] dark:bg-zinc-700 text-[10px] font-medium text-[#6b7280] dark:text-zinc-400">{book.extra}</span>}
+                        </p>
+                        <div className="flex items-center gap-4 mt-4 pt-3 border-t border-[#f3f4f6] dark:border-zinc-800">
+                          <button className="rounded-lg border border-[#d1d5db] dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-1.5 text-xs font-medium text-[#374151] dark:text-zinc-200 hover:bg-[#f9fafb] dark:hover:bg-zinc-700 transition-colors">
+                            Open book
+                          </button>
+                          <button className="flex items-center gap-1.5 text-xs font-medium text-[#6b7280] dark:text-zinc-400 hover:text-[#374151] dark:hover:text-zinc-200 transition-colors">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 6h16M4 12h16M4 18h10" /></svg>
+                            Summary
+                          </button>
+                          <button className="flex items-center gap-1.5 text-xs font-medium text-[#6b7280] dark:text-zinc-400 hover:text-[#374151] dark:hover:text-zinc-200 transition-colors">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 6h16M4 10h16M4 14h10M4 18h6" /></svg>
+                            Insights
+                          </button>
+                          <button className="ml-auto text-[#9ca3af] dark:text-zinc-600 hover:text-[#6b7280] dark:hover:text-zinc-400">
+                            <IconMoreVertical />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </main>
+
+            {/* Right Sidebar — News and Insights */}
+            <aside className="w-[320px] flex-shrink-0 border-l border-[#e2e5e9] dark:border-zinc-800 bg-white dark:bg-zinc-900">
+              <div className="p-5 space-y-6">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-sm font-semibold text-[#111827] dark:text-zinc-100">News and Insights</h2>
+                    <button className="text-[#d1d5db] dark:text-zinc-700 hover:text-[#9ca3af] dark:hover:text-zinc-500"><IconChevronDown /></button>
+                  </div>
+                  <div className="flex items-center gap-1.5 mb-4">
+                    <IconSparkles />
+                    <span className="text-xs font-medium text-[#374151] dark:text-zinc-200">Articles summarized by AI</span>
+                    <span className="rounded px-1.5 py-0.5 text-[10px] font-semibold text-[#7c3aed] dark:text-violet-400 bg-[#f5f3ff] dark:bg-violet-950/30">BETA</span>
+                  </div>
+                  <div className="space-y-4">
+                    {NEWS_ARTICLES.map((article, i) => (
+                      <div key={i} className="pb-4 border-b border-[#f3f4f6] dark:border-zinc-800 last:border-0 last:pb-0">
+                        <span className="text-sm font-medium text-[#2563eb] dark:text-blue-400 hover:underline leading-snug cursor-pointer">{article.title}</span>
+                        <div className="flex items-center gap-2 text-xs text-[#6b7280] dark:text-zinc-500 mb-1.5 mt-1">
+                          <span>{article.source}</span>
+                          <span>{article.date}</span>
+                        </div>
+                        <p className="text-xs text-[#6b7280] dark:text-zinc-400 leading-relaxed">{article.summary}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <button className="w-full mt-3 rounded-lg border border-[#d1d5db] dark:border-zinc-700 bg-white dark:bg-zinc-800 py-2 text-xs font-medium text-[#374151] dark:text-zinc-200 hover:bg-[#f9fafb] dark:hover:bg-zinc-700 transition-colors">
+                    Load more
+                  </button>
+                  <p className="text-[10px] text-[#9ca3af] dark:text-zinc-600 mt-2 text-center">
+                    AI-generated content may have inaccuracies.{" "}
+                    <button className="font-medium underline hover:text-[#6b7280] dark:hover:text-zinc-400">Learn more</button>
+                  </p>
+                </div>
+
+                {/* Certifications and templates */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-sm font-semibold text-[#111827] dark:text-zinc-100">Certifications and templates</h2>
+                    <button className="text-[#d1d5db] dark:text-zinc-700 hover:text-[#9ca3af] dark:hover:text-zinc-500"><IconChevronDown /></button>
+                  </div>
+                  <div className="rounded-xl border border-[#e2e5e9] dark:border-zinc-800 bg-[#f9fafb] dark:bg-zinc-800 p-4 text-center">
+                    <div className="flex items-center justify-center gap-2 mb-3">
+                      {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="h-10 w-10 rounded-lg bg-[#e2e5e9] dark:bg-zinc-700 flex items-center justify-center">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-[#374151] dark:text-zinc-300 mb-3 leading-relaxed">
+                      Explore our newest certification programs and best practice templates
+                    </p>
+                    <button className="w-full rounded-lg border border-[#d1d5db] dark:border-zinc-700 bg-white dark:bg-zinc-900 py-2 text-xs font-medium text-[#374151] dark:text-zinc-200 hover:bg-[#f9fafb] dark:hover:bg-zinc-800 transition-colors">
+                      Browse learning library
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating GRC Widget — hidden when modal is fully open, shown during close */}
+      {!modalOpen && (
+        <GrcWidget scan={scan} onClick={() => setModalOpen(true)} />
+      )}
+
+      {/* GRC Command Center Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-[3px]"
+            onClick={handleClose}
+            style={{ animation: modalClosing ? "grcBackdropOut 100ms ease-out both" : "grcBackdropIn 250ms ease-out both" }}
+          />
+          {/* Modal panel — expands up from widget position */}
+          <div
+            className="relative w-full max-w-2xl mx-4 max-h-[min(740px,80vh)] rounded-3xl border border-black/[0.09] dark:border-zinc-700 bg-[#f7f7f8] dark:bg-zinc-900 shadow-[0_32px_80px_-16px_rgba(0,0,0,0.3)] flex flex-col"
+            style={{
+              transformOrigin: "bottom center",
+              animation: modalClosing
+                ? "grcModalOut 100ms cubic-bezier(0.2,0,0.7,0.15) both"
+                : "grcModalIn 350ms cubic-bezier(0.22,1,0.36,1) both",
+            }}
+          >
+            <GrcModalContent scan={scan} onClose={handleClose} />
+          </div>
+        </div>
+      )}
+
+      {/* Animation keyframes */}
+      <style jsx global>{`
+        @keyframes grcModalIn {
+          from {
+            opacity: 0;
+            transform: scaleY(0.08) scaleX(0.6) translateY(0);
+          }
+          to {
+            opacity: 1;
+            transform: scaleY(1) scaleX(1) translateY(0);
+          }
+        }
+        @keyframes grcModalOut {
+          from {
+            opacity: 1;
+            transform: scaleY(1) scaleX(1) translateY(0);
+          }
+          to {
+            opacity: 0;
+            transform: scaleY(0.08) scaleX(0.6) translateY(40vh);
+          }
+        }
+        @keyframes grcBackdropIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes grcBackdropOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+        @keyframes grcWidgetIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        @keyframes grcWidgetGlow {
+          0%, 100% { box-shadow: 0 0 20px rgba(239,68,68,0.1), inset 0 0 20px rgba(239,68,68,0.02); }
+          50% { box-shadow: 0 0 30px rgba(239,68,68,0.2), inset 0 0 25px rgba(239,68,68,0.04); }
+        }
+      `}</style>
+    </div>
+  );
+}
